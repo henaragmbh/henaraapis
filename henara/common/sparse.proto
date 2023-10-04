@@ -1,0 +1,50 @@
+﻿syntax = "proto3";
+
+import "henara/common/types.proto";
+
+package henara.proto.sparse;
+
+
+/** def.requirement.3df01d90-f7b3-4a89-9f6b-5eeea1fd3fc9
+
+    When the presence of an attribute shall be optional, its value can
+    be wrapped in one of these messages.
+
+    In other words:
+
+    As you know, using henara.optional.*, or 'optional *' (or similar) directly
+    allows nullable properties to hold their NULL state by default.
+
+    If no information about an attribute is to be included in a message, may it be NULL or not,
+    one needs to distinguish between 'attribute not transferred' and 'attribute transferred and it is NULL or not'.
+
+    Therefore another surrounding sparse-container for the attribute is needed, whose
+    absence in a message depicts the absence of value-information for this attribute.
+    Accessing the attribute is invalid if the sparse-container was not transferred.
+
+    I.e.
+
+    If message.has_age() is FALSE, the attribute 'age' is invalid. No value information is present in the message for 'age'.
+
+    If message.has_age() is TRUE, the message contains value information for 'age', and
+        if then, message.age().has_value() is FALSE, the value of 'age' is NULL ...
+        if then, message.age().has_value() is TRUE , the value of 'age' is stored in message.age().value().
+
+
+
+    Timepoint is compatible to google.protobuf.Timestamp
+    Duration  is compatible to google.protobuf.Duration
+*/
+
+message Double    {double value = 1;}                     message optional_Double    {optional double                  value = 1;}    message vector_of_Double    {henara.proto.vector_of_Double    value = 1;}   message optional_vector_of_Double    {optional henara.proto.vector_of_Double    value = 1;}    message vector_of_optional_Double    {henara.proto.vector_of_optional_Double    value = 1;}    message optional_vector_of_optional_Double    {optional henara.proto.vector_of_optional_Double    value = 1;}
+message Float     {float  value = 1;}                     message optional_Float     {optional float                   value = 1;}    message vector_of_Float     {henara.proto.vector_of_Float     value = 1;}   message optional_vector_of_Float     {optional henara.proto.vector_of_Float     value = 1;}    message vector_of_optional_Float     {henara.proto.vector_of_optional_Float     value = 1;}    message optional_vector_of_optional_Float     {optional henara.proto.vector_of_optional_Float     value = 1;}
+message Int32     {int32  value = 1;}                     message optional_Int32     {optional int32                   value = 1;}    message vector_of_Int32     {henara.proto.vector_of_Int32     value = 1;}   message optional_vector_of_Int32     {optional henara.proto.vector_of_Int32     value = 1;}    message vector_of_optional_Int32     {henara.proto.vector_of_optional_Int32     value = 1;}    message optional_vector_of_optional_Int32     {optional henara.proto.vector_of_optional_Int32     value = 1;}
+message Int64     {int64  value = 1;}                     message optional_Int64     {optional int64                   value = 1;}    message vector_of_Int64     {henara.proto.vector_of_Int64     value = 1;}   message optional_vector_of_Int64     {optional henara.proto.vector_of_Int64     value = 1;}    message vector_of_optional_Int64     {henara.proto.vector_of_optional_Int64     value = 1;}    message optional_vector_of_optional_Int64     {optional henara.proto.vector_of_optional_Int64     value = 1;}
+message Uint32    {uint32 value = 1;}                     message optional_Uint32    {optional uint32                  value = 1;}    message vector_of_Uint32    {henara.proto.vector_of_Uint32    value = 1;}   message optional_vector_of_Uint32    {optional henara.proto.vector_of_Uint32    value = 1;}    message vector_of_optional_Uint32    {henara.proto.vector_of_optional_Uint32    value = 1;}    message optional_vector_of_optional_Uint32    {optional henara.proto.vector_of_optional_Uint32    value = 1;}
+message Uint64    {uint64 value = 1;}                     message optional_Uint64    {optional uint64                  value = 1;}    message vector_of_Uint64    {henara.proto.vector_of_Uint64    value = 1;}   message optional_vector_of_Uint64    {optional henara.proto.vector_of_Uint64    value = 1;}    message vector_of_optional_Uint64    {henara.proto.vector_of_optional_Uint64    value = 1;}    message optional_vector_of_optional_Uint64    {optional henara.proto.vector_of_optional_Uint64    value = 1;}
+message Bool      {bool   value = 1;}                     message optional_Bool      {optional bool                    value = 1;}    message vector_of_Bool      {henara.proto.vector_of_Bool      value = 1;}   message optional_vector_of_Bool      {optional henara.proto.vector_of_Bool      value = 1;}    message vector_of_optional_Bool      {henara.proto.vector_of_optional_Bool      value = 1;}    message optional_vector_of_optional_Bool      {optional henara.proto.vector_of_optional_Bool      value = 1;}
+message String    {string value = 1;}                     message optional_String    {optional string                  value = 1;}    message vector_of_String    {henara.proto.vector_of_String    value = 1;}   message optional_vector_of_String    {optional henara.proto.vector_of_String    value = 1;}    message vector_of_optional_String    {henara.proto.vector_of_optional_String    value = 1;}    message optional_vector_of_optional_String    {optional henara.proto.vector_of_optional_String    value = 1;}
+message Bytes     {bytes  value = 1;}                     message optional_Bytes     {optional henara.proto.Bytes      value = 1;}    message vector_of_Bytes     {henara.proto.vector_of_Bytes     value = 1;}   message optional_vector_of_Bytes     {optional henara.proto.vector_of_Bytes     value = 1;}    message vector_of_optional_Bytes     {henara.proto.vector_of_optional_Bytes     value = 1;}    message optional_vector_of_optional_Bytes     {optional henara.proto.vector_of_optional_Bytes     value = 1;}
+message Uuid      {string value = 1;}                     message optional_Uuid      {optional henara.proto.Uuid       value = 1;}    message vector_of_Uuid      {henara.proto.vector_of_Uuid      value = 1;}   message optional_vector_of_Uuid      {optional henara.proto.vector_of_Uuid      value = 1;}    message vector_of_optional_Uuid      {henara.proto.vector_of_optional_Uuid      value = 1;}    message optional_vector_of_optional_Uuid      {optional henara.proto.vector_of_optional_Uuid      value = 1;}
+message Timepoint {int64  seconds = 1; int32 nanos = 2;}  message optional_Timepoint {optional henara.proto.Timepoint  value = 1;}    message vector_of_Timepoint {henara.proto.vector_of_Timepoint value = 1;}   message optional_vector_of_Timepoint {optional henara.proto.vector_of_Timepoint value = 1;}    message vector_of_optional_Timepoint {henara.proto.vector_of_optional_Timepoint value = 1;}    message optional_vector_of_optional_Timepoint {optional henara.proto.vector_of_optional_Timepoint value = 1;}
+message Duration  {int64  seconds = 1; int32 nanos = 2;}  message optional_Duration  {optional henara.proto.Duration   value = 1;}    message vector_of_Duration  {henara.proto.vector_of_Duration  value = 1;}   message optional_vector_of_Duration  {optional henara.proto.vector_of_Duration  value = 1;}    message vector_of_optional_Duration  {henara.proto.vector_of_optional_Duration  value = 1;}    message optional_vector_of_optional_Duration  {optional henara.proto.vector_of_optional_Duration  value = 1;}

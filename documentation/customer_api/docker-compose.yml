@@ -1,0 +1,74 @@
+version: '3.8'
+
+networks:
+  net:
+    driver: bridge
+
+volumes:
+  database:
+
+services:
+
+  otelcol:
+    image: "otel/opentelemetry-collector"
+    restart: unless-stopped
+    command: [--config=/etc/otel-collector-config.yaml]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./otel:/var/otel
+    ports:
+#     - 1888:1888 # pprof extension
+#     - 8888:8888 # Prometheus metrics exposed by the collector
+#     - 8889:8889 # Prometheus exporter metrics
+#     - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+#     - 4318:4318 # OTLP http receiver
+#     - 55679:55679 # zpages extension
+    networks:
+      - net
+
+  database:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    user: root
+    restart: unless-stopped
+    ports:
+      - "${CUSTOMER_SERVICE_db__port}:${CUSTOMER_SERVICE_db__port}"
+    networks:
+      - net
+    volumes:
+      #- database:/var/henara/hws/database
+      - database:/var/opt/mssql
+      - .:/app # in here you can place your backup file
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_SA_PASSWORD=${CUSTOMER_SERVICE_db__password}"
+      - "MSSQL_TCP_PORT=${CUSTOMER_SERVICE_db__port}"
+#     - "MSSQL_DATA_DIR=/var/henara/hws/database"
+#     - "MSSQL_DUMP_DIR=/var/henara/hws/database/dump"
+#     - "MSSQL_LOG_DIR=/var/henara/hws/database/log"
+#     - "MSSQL_BACKUP_DIR=/var/henara/hws/database/backup"
+#     - "MSSQL_MASTER_DATA_FILE=/var/henara/hws/database/master.mdf"
+#     - "MSSQL_MASTER_LOG_FILE=/var/henara/hws/database/master.ldf"
+#     - "MSSQL_ERROR_LOG_FILE=/var/henara/hws/database/log/errorlog"
+    healthcheck:
+      # https://github.com/Microsoft/mssql-docker/issues/133
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost,${CUSTOMER_SERVICE_db__port} -U sa -P "${CUSTOMER_SERVICE_db__password}" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  customer_service:
+    image: henara/customer_service:${CUSTOMER_SERVICE_VERSION}
+    restart: unless-stopped
+    ports:
+      - ${CUSTOMER_SERVICE_grpc__port}:${CUSTOMER_SERVICE_grpc__port}
+    networks:
+      - net
+    env_file:
+      - config.env
+    depends_on:
+      otelcol:
+        condition: service_started
+      database:
+        condition: service_healthy

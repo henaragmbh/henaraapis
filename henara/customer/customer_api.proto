@@ -1,0 +1,167 @@
+﻿syntax = "proto3";
+
+package henara.customer.proto;
+
+import "henara/customer/customer_model.proto";
+import "henara/common/types.proto";
+
+
+service customer_API
+{
+    /// def.requirement.8fd06d41-8cb4-4816-a5aa-97cd3040658a - simple test call
+    rpc hello           (hello_Request)           returns (hello_Response);
+
+
+      ////////////////////////////////////////////////////////////////////////////////
+     // CRUD of customer
+    //
+
+    /// def.requirement.ff947822-59b0-43c9-aff8-3b7f40223ae2
+    rpc customer_create (customer_create_Request) returns (customer_create_Response);
+
+    /// def.requirement.37a6dc1b-ac5d-472f-8266-2e47943e9c95
+    rpc customer_read   (customer_read_Request)   returns (customer_read_Response);
+
+    /// def.requirement.4fd3d406-aed1-409a-a828-1062a6c1bb67
+    rpc customer_update (customer_update_Request) returns (customer_update_Response); // NYI
+
+    /// def.requirement.d8038b44-d1aa-4cb0-bcd7-85bccf08bd49
+    rpc customer_delete (customer_delete_Request) returns (customer_delete_Response);
+
+
+      ////////////////////////////////////////////////////////////////////////////////
+     // CRUD of appointment
+    //
+
+    /// def.requirement.efcb4ba3-d9b0-4297-a329-938518c50d82
+    rpc appointment_create (appointment_create_Request) returns (appointment_create_Response); // NYI
+
+    /// def.requirement.7cf41f8e-ec77-481b-8737-64178d4ca4b0
+    rpc appointment_read   (appointment_read_Request)   returns (appointment_read_Response);
+
+    /// def.requirement.910af886-297f-4b2f-9edf-35550c2a89d5
+    rpc appointment_update (appointment_update_Request) returns (appointment_update_Response); // NYI
+
+    /// def.requirement.a5acc8cb-3e61-46e6-83df-2a001617bb03
+    rpc appointment_delete (appointment_delete_Request) returns (appointment_delete_Response); // NYI
+
+
+      ////////////////////////////////////////////////////////////////////////////////
+     // CRUD of webhook_endpoint
+    //
+
+    /// def.requirement.e2a7bf8b-7614-4b58-a4db-237030a3dc0a
+    rpc webhook_endpoint_create (webhook_endpoint_create_Request) returns (webhook_endpoint_create_Response); // NYI
+
+    /// def.requirement.9e72da70-42a2-4f25-a702-3c051e7fb516
+    rpc webhook_endpoint_read   (webhook_endpoint_read_Request)   returns (webhook_endpoint_read_Response); // NYI
+
+    /// def.requirement.cdac0902-d9bb-4708-b16a-b9c0dfb47216
+    rpc webhook_endpoint_update (webhook_endpoint_update_Request) returns (webhook_endpoint_update_Response); // NYI
+
+    /// def.requirement.2e56b82a-fe5b-48c4-b4f3-0ac77f7424d1
+    rpc webhook_endpoint_delete (webhook_endpoint_delete_Request) returns (webhook_endpoint_delete_Response); // NYI
+
+
+      ////////////////////////////////////////////////////////////////////////////////
+     // synchronisation
+    //
+
+    /// def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c - read entities in a bulk
+    rpc query           (query_Request)           returns (query_Response);
+}
+
+
+message hello_Request
+{
+    string      sender_name = 1;
+}
+
+message hello_Response
+{
+    string      greeting_text = 1;
+}
+
+
+message customer_create_Request         {Customer          customer            = 1;} message customer_create_Response        {}
+message customer_read_Request           {henara.proto.Uuid customer_id         = 1;} message customer_read_Response          {Customer customer = 1;}
+message customer_update_Request         {Customer          customer            = 1;} message customer_update_Response        {}
+message customer_delete_Request         {henara.proto.Uuid customer_id         = 1;} message customer_delete_Response        {}
+
+
+message appointment_create_Request      {Appointment       appointment         = 1;} message appointment_create_Response     {}
+message appointment_read_Request        {henara.proto.Uuid appointment_id      = 1;} message appointment_read_Response       {Appointment appointment = 1;}
+message appointment_update_Request      {Appointment       appointment         = 1;} message appointment_update_Response     {}
+message appointment_delete_Request      {henara.proto.Uuid appointment_id      = 1;} message appointment_delete_Response     {}
+
+message webhook_endpoint_create_Request {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_create_Response{}
+message webhook_endpoint_read_Request   {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_read_Response  {Webhook_endpoint web_hook_endpoint = 1;}
+message webhook_endpoint_update_Request {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_update_Response{}
+message webhook_endpoint_delete_Request {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_delete_Response{}
+
+
+message query_Request
+{
+    message Selector
+    {
+        enum Kind
+        {
+            empty_Sort                =  0;
+            Customer                  =  1;
+            Therapist                 =  2;
+            Room                      =  3;
+            Appointment               =  4;
+            Custom_health_insurance   =  5;
+            Doctor                    =  6;
+            Approval                  =  7;
+            Remedy_type               =  8;
+            Remedy_position           =  9;
+            Prescription_item         = 10;
+            Prescription              = 11;
+            Practice                  = 12;
+        }
+
+        Kind                        kind                            = 1;
+        bool                        include_this_kind               = 2;
+
+        /** def.requirement.36d18a0f-bfde-4b17-a4cd-05495a097d3e
+            If TRUE, foreign keys to this Kind are inserted to entities that reference these Kind.
+            Otherwise those references are omitted.
+
+            Use Case.
+                If entities of Kind 'Prescription' are selected with 'include_this_kind' enabled
+                and entities of Kind 'Prescription_item' are selected with 'include_this_kind' disabled but with 'include_references_to_this_kind' enabled,
+                the the collection Prescription::prescription_item_ids gets populated.
+                This enables the client to later query particular entities by their key.
+        */
+        bool                        include_references_to_this_kind = 3; // NYI
+
+
+        // IDs of this Kind to query. If EMPTY, all entities of this Kind get addressed
+        repeated henara.proto.Uuid  entity_ids                      = 4;
+    }
+
+    repeated Selector               selectors               = 1;
+    optional henara.proto.Timepoint only_what_changed_since = 2; // NYI
+}
+
+message query_Response
+{
+    /** def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c
+        A query returns flat lists of the addressed entities.
+        Entities contain foreign keys which tell about associated entities.
+    */
+    repeated Appointment                appointments            =  1;
+    repeated Approval                   approvals               =  2; // NYI
+    repeated Customer                   customers               =  3;
+    repeated Doctor                     doctors                 =  4; // NYI
+    repeated Practice                   practices               =  5; // NYI
+    repeated Prescription               prescriptions           =  6; // NYI
+    repeated Prescription_item          prescription_items      =  7; // NYI
+    repeated Remedy_position            remedy_positions        =  8; // NYI
+    repeated Remedy_type                remedy_types            =  9; // NYI
+    repeated Room                       rooms                   = 10; // NYI
+    repeated Therapist                  therapists              = 11; // NYI
+
+    henara.proto.Timepoint              execution_time          = 30;
+}

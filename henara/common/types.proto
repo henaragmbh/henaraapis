@@ -1,0 +1,79 @@
+﻿syntax = "proto3";
+
+package henara.proto;
+
+
+/// def.requirement.66315e08-2c50-4b7b-a9f3-841ed8c4d9f5
+message Bytes
+{
+    bytes value = 1;
+}
+
+/// def.requirement.20f26449-93a3-474e-aa2b-ab5064e06c4c - the 16 byte binary representation of the uuid
+message Uuid
+{
+    bytes value = 1;
+}
+
+/// def.requirement.ab092272-6cea-4b05-ba49-6cdec566bf9c - compatible to google.protobuf.Timestamp
+message Timepoint
+{
+    int64 seconds = 1;
+    int32 nanos   = 2;
+}
+
+/// def.requirement.554286f2-0efd-4b3e-a872-3739f3502c92 - compatible to google.protobuf.Duration
+message Duration
+{
+    int64 seconds = 1;
+    int32 nanos   = 2;
+}
+
+/// def.requirement.4ff8a751-36ab-4d1c-b7d1-67e8ba0217e4
+message Date
+{
+    int32 year   = 1;
+    int32 month  = 2;
+    int32 day    = 3;
+}
+
+/// def.requirement.c497b6c4-388f-43e6-ac5f-a59b56ad6c8d
+message Time
+{
+    int32 hour   = 1;
+    int32 minute = 2;
+    int32 second = 3;
+    int32 nano   = 4;
+}
+
+/// def.requirement.d52f0aa3-6eb7-43bf-a1a4-701782240e57
+message Datetime
+{
+    int32 year   = 1;
+    int32 month  = 2;
+    int32 day    = 3;
+    int32 hour   = 4;
+    int32 minute = 5;
+    int32 second = 6;
+    int32 nano   = 7;
+}
+
+
+/*
+Vector Of Value                                                | Vector of optional Value
+*/
+message vector_of_Double   {repeated double     value = 1;}    message vector_of_optional_Double   {message Optional {optional double    value = 1;} repeated Optional value = 1;}
+message vector_of_Float    {repeated float      value = 1;}    message vector_of_optional_Float    {message Optional {optional float     value = 1;} repeated Optional value = 1;}
+message vector_of_Int32    {repeated int32      value = 1;}    message vector_of_optional_Int32    {message Optional {optional int32     value = 1;} repeated Optional value = 1;}
+message vector_of_Int64    {repeated int64      value = 1;}    message vector_of_optional_Int64    {message Optional {optional int64     value = 1;} repeated Optional value = 1;}
+message vector_of_Uint32   {repeated uint32     value = 1;}    message vector_of_optional_Uint32   {message Optional {optional uint32    value = 1;} repeated Optional value = 1;}
+message vector_of_Uint64   {repeated uint64     value = 1;}    message vector_of_optional_Uint64   {message Optional {optional uint64    value = 1;} repeated Optional value = 1;}
+message vector_of_Bool     {repeated bool       value = 1;}    message vector_of_optional_Bool     {message Optional {optional bool      value = 1;} repeated Optional value = 1;}
+message vector_of_String   {repeated string     value = 1;}    message vector_of_optional_String   {message Optional {optional string    value = 1;} repeated Optional value = 1;}
+message vector_of_Bytes    {repeated Bytes      value = 1;}    message vector_of_optional_Bytes    {message Optional {optional Bytes     value = 1;} repeated Optional value = 1;}
+message vector_of_Uuid     {repeated Uuid       value = 1;}    message vector_of_optional_Uuid     {message Optional {optional Uuid      value = 1;} repeated Optional value = 1;}
+message vector_of_Timepoint{repeated Timepoint  value = 1;}    message vector_of_optional_Timepoint{message Optional {optional Timepoint value = 1;} repeated Optional value = 1;}
+message vector_of_Duration {repeated Duration   value = 1;}    message vector_of_optional_Duration {message Optional {optional Duration  value = 1;} repeated Optional value = 1;}
+message vector_of_Date     {repeated Date       value = 1;}    message vector_of_optional_Date     {message Optional {optional Date      value = 1;} repeated Optional value = 1;}
+message vector_of_Time     {repeated Time       value = 1;}    message vector_of_optional_Time     {message Optional {optional Time      value = 1;} repeated Optional value = 1;}
+message vector_of_Datetime {repeated Datetime   value = 1;}    message vector_of_optional_Datetime {message Optional {optional Datetime  value = 1;} repeated Optional value = 1;}

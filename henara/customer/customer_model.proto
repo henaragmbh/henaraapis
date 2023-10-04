@@ -1,0 +1,894 @@
+﻿syntax = "proto3";
+
+package henara.customer.proto;
+
+import "henara/common/types.proto";
+
+/** Mit [mix-in] markierte Nachrichten enthalten selbst keine adressierbare ID.
+    Instanzen von [mix-in] werden in [entity]-Instanzen, welche ihrerseits über eine ID verfügen, eingebettet.
+*/
+
+
+/** def.requirement.fc0ad32c-de87-45a6-8799-697c682afb00
+    [mix-in]
+    Meta-Daten einer Entität
+*/
+message Entity_meta_data
+{
+    // def.requirement.959032d4-412f-45e4-8a8a-41982491d85a - TRUE, wenn die Entität als gelöscht markiert ist
+    // Gelöschte Entitäten werden bei der Synchronisation nicht ausgelassen.
+    bool                        is_deleted  = 1;
+
+    // def.requirement.de7567e1-a845-497f-ab65-91dbde3c3d5f - Zeitpunkt der Erstellung der Entität
+    henara.proto.Timepoint      created_at  = 2;
+
+    // def.requirement.48e70743-8e08-4855-9732-378692c894ea - Zeitpunkt der letzten Änderung der Entität
+    henara.proto.Timepoint      updated_at  = 3;
+}
+
+
+/** def.requirement.5b3f1b44-a80c-4035-8ff4-1aa00f6a3630
+    [entity]
+*/
+message Webhook_endpoint
+{
+    // def.requirement.c42e90d8-5705-48f8-84ed-18a2f7686e67 - meta data
+    Entity_meta_data            meta                            = 100;
+
+    // def.requirement.4762660f-acf6-4580-9d01-59d10a42c84c - Unique identifier for the object.
+    henara.proto.Uuid           webhook_endpoint_id             = 2;
+
+    // def.requirement.4054dcc4-b220-4073-b6fa-481cdf40bd40 - The API version events are rendered as for this webhook endpoint.
+    string                      api_version                     = 3;
+
+    // def.requirement.ae040bf3-2c6d-45b5-a85a-edba0adccb7a - An optional description of what the webhook is used for.
+    string                      description                     = 4;
+
+    // def.requirement.75037db4-f930-4001-9195-fb518187807b - The list of events to enable for this endpoint. [’*’] indicates that all events are enabled, except those that require explicit selection.
+    repeated string             enabled_events                  = 5;
+
+    // def.requirement.aa4b0769-5c2a-4dd0-a544-5de6c1a9f9a1 - Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+    repeated string             tags                            = 6;
+
+    // def.requirement.595f753d-11b4-4c66-816d-d76eefaec017 - The endpoints secret, used to generate webhook signatures. Only returned at creation.
+    string                      secret                          = 7;
+
+    // def.requirement.d20bbd29-6ce7-45b8-b3d0-4218cc649447 - The status of the webhook. It can be enabled or disabled.
+    bool                        is_enabled                      = 8;
+
+    // def.requirement.f650d06f-1b3a-4646-8afc-a43baaf14aaf - The URL of the webhook endpoint.
+    string                      url                             = 9;
+}
+
+
+/** def.requirement.2aa1a40c-be7c-466d-9324-f8d78f4f2f33
+    [mix-in]
+    Persönliche Daten
+*/
+message Person
+{
+    enum Gender
+    {
+        empty_Gender = 0;
+        m            = 1;
+        f            = 2;
+        d            = 3;
+    }
+
+    // def.requirement.17272783-0484-4e3d-abef-f1dfeb17ba2a - Vorname
+    string                      first_name                  = 1;
+
+    // def.requirement.f195ec3d-ffac-4930-812e-824783b57d50 - Nachname
+    string                      last_name                   = 2;
+
+    // def.requirement.e636418e-065e-4d30-9f83-d0996b083fab - Titel (z.B. “Dr.”)
+    string                      title                       = 3;
+
+    // def.requirement.e0e7cecb-880d-4775-af22-ec47be169b93 - Anrede (z.B. “Herr“, “Frau“, …)
+    string                      salutation                  = 4;
+
+    // def.requirement.6775503d-0fff-4f4e-b660-733f34c9c90c - Geschlecht
+    optional Gender             gender                      = 5;
+
+    // def.requirement.d464b244-2022-4afc-afd3-2f07143f47fc - Geburtsdatum
+    henara.proto.Date           day_of_birth                = 6;
+
+    // def.requirement.1ca7671d-a760-444e-92a2-5a50473f45e0 - TRUE, wenn verstorben
+    bool                        is_deceased                 = 7;
+}
+
+
+/** def.requirement.81e08de3-c027-4b87-a52a-8d72045daf4c
+    [mix-in]
+    Standort
+*/
+message Location
+{
+    // def.requirement.596926c9-5dd0-442c-a86d-2120003902e0 - Land
+    string                      country                    = 1;
+
+    // def.requirement.01100539-1544-4333-a7fe-45ac4ef839ed - Postleitzahl
+    string                      postcode                   = 2;
+
+    // def.requirement.5ab87728-89e5-4f81-a214-e468cccea88e - Stadt
+    string                      town                       = 3;
+
+    // def.requirement.ccb927ad-3e56-48b3-89c8-20f1e62a21e1 - Straße
+    string                      street                     = 4;
+}
+
+
+/** def.requirement.8bab21a4-586a-46a8-bca0-072eafada2d2
+    [mix-in]
+    Postadresse
+*/
+message Postal_address
+{
+    Location                    location                   = 1;
+
+    // def.requirement.89f1d958-1b7b-4aae-a4c5-5c2ed5768f37 - Vorname
+    string                      first_name                 = 2;
+
+    // def.requirement.b62db5eb-1f09-4314-9638-94441dd0ad4c - Nachname
+    string                      last_name                  = 3;
+
+    // def.requirement.cfdb9c6f-6810-4845-8fd2-6dfe3b685755 - Zusatz
+    string                      addition                   = 4;
+}
+
+
+/** def.requirement.c917a712-10d9-4f37-9a8a-0da7b32bfb11
+    [mix-in]
+    Kontaktinformation
+
+    Neben dem Postversand lassen sich Personen über elektronische Dienste benachrichtigen.
+    Eine Instanz dieser Nachricht hält die Art des Dienstes und Adresse innerhalb des Dienstes.
+*/
+message Contact_address
+{
+    enum Contact_address_type
+    {
+        empty_Contact_address_type = 0;
+
+        // def.requirement.64e3295c-2cf8-42da-bbca-0f6b82c50d11 - Rufnummer Festnetz
+        landline                   = 1;
+
+        // def.requirement.7c16688f-0a8e-407f-989d-b9101387c74f - Rufnummer mobil
+        mobile                     = 2;
+
+        // def.requirement.5da19bf9-6fb4-4d30-a87d-b0d789c35e74 - SMS Rufnummer
+        sms                        = 3;
+
+        // def.requirement.488fd8f5-1dec-460e-ba1b-1c7c45d404ba - E-Mail Adresse
+        email                      = 4;
+
+        // def.requirement.b974e478-cf64-4528-ad05-ff7157106910 - Rufnummer Fax
+        fax                        = 5;
+
+        // def.requirement.fd5ea887-7c7e-485c-b2c8-67f1a81cb2a3 - Homepage
+        web                        = 6;
+    }
+
+    Contact_address_type        type                            = 1;
+
+    // def.requirement.384faf41-96de-42be-9ced-fa8501c8b7c4 - Adresse im üblichen Format des Dienstes
+    string                      address                         = 2;
+
+    // def.requirement.65df7c06-96a7-42b7-b66a-724b96ef4681 - TRUE, wenn Benachrichtigungen durch diesen Dienst gestattet sind
+    bool                        is_permitted                    = 3;
+}
+
+
+/** def.requirement.3cf692d2-2fe0-4369-aee4-174e86a1a008
+    [mix-in]
+    Bankverbindung für Lastschriften bei Selbstzahlern
+*/
+message Bank_account
+{
+    // def.requirement.e0d24a06-08c7-43c4-9e84-c5c41a50552b
+    string                      owners_name                     = 1;
+
+    // def.requirement.c4b45d6e-0e22-4335-834b-58912c4652e1
+    string                      bank_name                       = 2;
+
+    // def.requirement.ff088675-f8fc-4ff2-a4a3-9fdbe167d9e5
+    string                      iban                            = 3;
+
+    // def.requirement.ac2943a6-df8c-4ecf-a10c-df092237e0fe
+    string                      bic                             = 4;
+}
+
+
+/** def.requirement.459cc859-2b67-4663-998d-ec666f93375e
+    [entity]
+    Patient oder Kunde für eine Dienstleistung
+*/
+message Customer
+{
+    // def.requirement.4f117d76-0d21-4224-9521-0898e5a0c001
+    Entity_meta_data            meta                            = 100;
+
+    enum Covid_state
+    {
+        empty_Covid_state = 0;
+
+        // def.requirement.b3b75b4f-ca8a-435e-94eb-c8e612c2a6aa - ungeimpft
+        unvaccinated      = 1;
+
+        // def.requirement.acc3c813-b938-4ef7-901b-3a271c78a809 - geimpft
+        vaccinated        = 2;
+
+        // def.requirement.adfc7a44-19d6-40f2-9033-ad81819f00b5 - genesen
+        recovered         = 3;
+    }
+
+
+    // def.requirement.867aebfa-7af0-4eec-ae44-b52602c8a36d - Globally unique identifier for the given Customer
+    henara.proto.Uuid           customer_id                     = 1;
+
+    // def.requirement.facb14dc-a755-40f2-b6ab-e382deaeff63 - Global eindeutiger Schlüssel der assoziierten Praxisgruppe
+    henara.proto.Uuid           praxis_group_id                 = 2;
+
+    // def.requirement.9b3eaca8-664c-4e78-8704-8919ad98132c
+    Person                      person                          = 3;
+
+    // def.requirement.bb27a0e7-c564-40cb-887a-bb8a6e5f9060
+    Postal_address              postal_address                  = 4;
+
+    // def.requirement.eb0fc14d-4cfa-40ea-8c10-6a9c04e4a8e7
+    repeated Contact_address    contact_addresses               = 5;
+
+    // def.requirement.abcdee15-c6c4-46d2-8ba5-1d0798bffdcf - Freitext für Bemerkungen
+    string                      remark                          = 6;
+
+    // def.requirement.32964790-3d97-4f8c-b6c7-853aec35b533 - Standard-Versicherung (null bei Selbstzahlern)
+    optional henara.proto.Uuid  default_health_insurance_id     = 7;
+
+//    // def.requirement.f8b58a69-d8f9-4c09-851e-5fada6c9b378 - Versichertennummer (leer bei Selbstzahlern)
+//    string                      health_insurance_number         = 8;
+
+    // def.requirement.2077ccac-5696-4c54-8c04-9d4a21825a57 - Erster Tag der Zuzahlungsbefreiung
+    henara.proto.Date           co_payment_exemption_from       = 9;
+
+    // def.requirement.3da305cf-1f0e-40be-9365-cafde0e11884 - Letzter Tag der Zuzahlungsbefreiung
+    henara.proto.Date           co_payment_exemption_until      = 10;
+
+    // def.requirement.a42cf787-5f40-44dd-942d-01ebd093636d - Zeitpunkt der letzten Synchronisation mit der Gesundheitskarte
+    henara.proto.Timepoint      last_card_read                  = 11;
+
+    // def.requirement.782a354d-8421-458e-80ab-a69f11257611 - TRUE, wenn (Alten-)Heimpatient
+    bool                        is_instituted                   = 12;
+
+    // def.requirement.6327d8df-fc06-46ea-96d3-7f39489ee27a
+    Bank_account                bank_account                    = 13;
+
+    // def.requirement.eb70066e-b9af-4c21-b868-c41c5f0c524c - Empfänger für Rechnungen (null, wenn 'postal_address'[requirement.bb27a0e7-c564-40cb-887a-bb8a6e5f9060] versendet werden soll)
+    Postal_address              invoice_recipient               = 14;
+
+    // def.requirement.e1d6ade3-ea9d-4aad-b120-8cd9993a94a9
+    Covid_state                 covid_state                     = 15;
+
+    // def.requirement.fd645417-07b0-4176-909c-c93e7588e212 - Tag der Ausstellung des COVID-Zertifikates
+    henara.proto.Date           covid_certificate_from          = 16;
+
+    // def.requirement.f6817c72-6e59-4086-b7b6-df47137fb365 -  TRUE, wenn der Patient nicht behandelt werden soll
+    bool                        is_suspended_from_treatment     = 17;
+
+    // def.requirement.d4df68b0-9d6e-48c3-b771-7dd643e6b880 - Chip-ID, falls der Patient einen Chip bekommt (Karte, Schlüssel, RFID, …)
+    string                      chip_id                         = 18;
+}
+
+
+/** def.requirement.558e4e5c-9e73-47dc-a80e-07809b18a05e
+    [entity]
+    Ein Therapeut
+*/
+message Therapist
+{
+    // def.requirement.45749e5c-4a83-4e10-8e9f-24bc1a88e2f2
+    Entity_meta_data            meta                            = 100;
+
+    // def.requirement.ec3e03c2-2fc9-458e-b64c-3e6fe7a5ffaf - Globally unique identifier for the given Therapist
+    henara.proto.Uuid           therapist_id                    = 1;
+
+    // def.requirement.0eb52b0c-a77b-4564-bc37-78b5904cce5a- menschenlesbare Kurzform
+    string                      short_description               = 2;
+}
+
+
+/** def.requirement.23b9d00a-3f3b-425b-a713-39b0861ce779
+    [entity]
+    Ein konkreter (Behandlungs-) Raum
+*/
+message Room
+{
+    // def.requirement.6720f892-8739-46f1-9d9f-608e05a5cb19
+    Entity_meta_data            meta                            = 100;
+
+    // def.requirement.0cd16168-20de-44b1-81d2-a988821f6bb5 -  Globally unique identifier for the given Room
+    henara.proto.Uuid           room_id                         = 1;
+
+    // def.requirement.9b0ab0f0-2208-4ea4-a1c6-51dc95da7513 - menschenlesbare Kurzform
+    string                      short_description               = 2;
+}
+
+
+/** def.requirement.896d1dfa-714d-4f0d-a5bb-d0f9dba719a3
+    [entity]
+    Ein konkreter (Behandlungs-) Termin oder eine Terminreservierung
+*/
+message Appointment
+{
+    // def.requirement.e975bcff-8c13-4544-986a-7b3f0b534a8e
+    Entity_meta_data                meta                        = 100;
+
+    // def.requirement.6fbc552f-0f57-4dc1-ad85-912499490653
+    // Globally unique identifier for the given Appointment
+    henara.proto.Uuid               appointment_id              = 1;
+
+    // def.requirement.274e2f03-0415-4f5d-8ca6-ef5440a25b92
+    henara.proto.Uuid               customer_id                 = 2;
+
+    // def.requirement.4b44eebc-e7e6-40cf-a418-da556bbfe2a2
+    henara.proto.Uuid               room_id                     = 3;
+
+    // def.requirement.f89ca043-7fe2-4a12-82ee-7960534d5cb1
+    henara.proto.Uuid               therapist_id                = 4;
+
+    // def.requirement.6454ac8b-5519-4f09-a437-2d75492005a5
+    henara.proto.Datetime           begin                       = 5;
+
+    // def.requirement.39d840f5-d814-455d-9f75-0e2d39d20939
+    henara.proto.Datetime           end                         = 6;
+
+    // def.requirement.ad209b8c-1c74-44f2-bf7d-095c000ce8e7
+    bool                            is_a_home_visit             = 7;
+
+    // def.requirement.956782f1-cfe6-412c-a600-2ff7ef652860
+    repeated henara.proto.Uuid      remedy_type_ids             = 8;
+
+    // def.requirement.57d8e051-f52f-4b7b-be5c-681f5e36e2c1
+    henara.proto.Uuid               prescription_id             = 9;
+
+    // def.requirement.a0b5ef8c-8c79-4350-ad0f-6c882787818f
+    repeated henara.proto.Uuid      prescription_item_ids       = 10;
+}
+
+
+/** def.requirement.7e02808e-7629-4528-9840-600a2b20104b
+    [mix-in]
+    Optionen einer Verordnung
+*/
+message Prescription_options
+{
+    // def.requirement.02fc8872-4277-4679-bbd0-4bbd9f755402 - ist Folgeverordnung
+    bool                        is_a_followup_prescription      = 1;
+
+    // def.requirement.d59dea72-db33-4dcb-b90f-c7ad384ee72c - ist Fortsetzung einer Verordnung, z.B in anderer Praxis
+    bool                        is_a_continuation               = 2;
+
+    // def.requirement.675bd3f0-b13a-4d61-bcd3-31cad19dd77d - ist Therapiebericht
+    bool                        is_a_therapy_report_requested   = 3;
+
+    // def.requirement.1cfad9a7-3a91-405e-9f7f-0a645c1aabbc - ist Erstbefund
+    bool                        is_an_initial_finding           = 4;
+
+    // def.requirement.7f26e3ee-9c4e-4adc-ac82-e159ee50606c - is zuzahlungsbefreit
+    bool                        is_co_payment_exempt            = 5;
+
+    // def.requirement.b89985b2-6666-45ea-8a7c-e7457ba78cee - Zuzahlung wurde gemahnt "DD"
+    bool                        is_co_payment_dunned            = 6;
+
+    // def.requirement.a7cb1fb5-4982-4948-99c4-07a931e2bc8c - Zuzahlung wurde an HENARA weitergeleitet, weil der Patient nicht gezahlt hat
+    bool                        is_co_payment_forwarded         = 7;
+
+    // def.requirement.a9a082ae-dabd-4543-acc6-6d9332dcb83f - ist BVG-Fall (Bundesversorgungsgesetz); sollte dann auch zuzahlungsbefreit sein
+    bool                        is_a_bvg_case                   = 8;
+
+    // def.requirement.4bdb68df-4c83-4bdf-9adc-688d0b630e58 - Unfall (-folgen)
+    bool                        is_caused_by_an_accident        = 9;
+
+    // def.requirement.bc06deed-27e0-4465-838d-42ba30508c85 - Außerhalb des Regelfalles
+    bool                        is_unusual                      = 10;
+
+    // def.requirement.d1ac96d7-6eea-48da-b0bb-cf734928a9c9 - ist Gruppentherapie
+    bool                        is_a_group_therapy              = 11;
+
+    // def.requirement.5ddbdddf-000d-4fb1-bfd1-38219b444af9 - ist Hausbesuch
+    bool                        is_a_home_visit                 = 12;
+
+    // def.requirement.0005eb12-6af1-4e43-a558-bc00782bb899 - ist Ergotherapeutische Schiene "S"
+    bool                        is_a_splint                     = 13;
+
+    // def.requirement.51c865e7-1cd8-45c0-ac81-0ab30d184978 - ist Heilpraktiker Beratung "CO"
+    bool                        is_a_consulting                 = 14;
+
+    // def.requirement.b47739eb-7a05-437e-ad27-95f9b2cc8367 - ist Heilpraktiker Untersuchung "ME"
+    bool                        is_an_examination               = 15;
+
+    // "7156eaf0-13ab-4c0b-a957-3830d7d19349"_uuid- Dringlicher Handlungsbedarf (innerhalb von 14 Tagen)
+    bool                        is_urgent                       = 16;
+}
+
+
+/** def.requirement.01aaabad-e8f4-478e-8e50-6597e19bb5e6
+    [entity]
+    der überweisende Arzt
+*/
+message Doctor
+{
+    // def.requirement.ebc2e708-f921-40fe-bfb0-faaf2c65dce6
+    Entity_meta_data            meta                = 100;
+
+    // def.requirement.a10c5f7d-a626-4a1a-936f-393fbecfbab4
+    henara.proto.Uuid           doctor_id           = 1;
+
+    // def.requirement.29d94e67-13af-4f1b-9b1c-4466b33a35f2
+    henara.proto.Uuid           praxis_group_id     = 2;
+
+    // def.requirement.f5c73b5d-ebf5-4977-bbad-9b50b7a2f17f - lebenslange Arztnummer
+    string                      lanr                = 3;
+
+    // def.requirement.3bc9b10c-8888-4b1c-b8c9-bf6a55bd06cb - Betriebsstättennummer
+    string                      bsnr                = 4;
+
+    // def.requirement.39395414-9a12-43ff-9662-e5aa1133369d
+    Person                      person              = 5;
+
+    // def.requirement.b1071ade-5489-4e4c-8a01-35857f2fbfd3
+    Postal_address              postal_address      = 6;
+
+    // def.requirement.da2d79b4-3671-4d92-8e0f-3a50f845136b
+    repeated Contact_address    contact_addresses   = 7;
+
+    // def.requirement.5ffa6494-4c20-4543-bceb-56e6a98d896b
+    Bank_account                bank_account        = 8;
+}
+
+
+/** def.requirement.9fd7b011-12b9-48ea-8bd5-4a0c3a06c285
+    [mix-in]
+*/
+message Approval
+{
+    // def.requirement.8c92383a-2a28-4da0-838d-99943e39ab74
+    Entity_meta_data            meta                = 100;
+
+    enum Approval_type
+    {
+        empty_Approval_type =  0;
+
+        // def.requirement.5b109551-94af-456f-9187-e0301dd73166 - Einzelverordnungsbezogen
+        B1                  = 10;
+
+        // def.requirement.62106a05-1fca-4ba7-a04c-0db4f909d026 - Langfristig
+        B2                  = 20;
+    }
+
+    // def.requirement.b1c519a7-f828-412e-92db-195c252e1990 - Genehmigungskennzeichen
+    string                      approval_id = 1;
+
+    // def.requirement.e346c010-35aa-4bd8-86e9-fffc637b3e90
+    henara.proto.Date           approved_at = 2;
+
+    // def.requirement.3e6dc34e-996a-4d54-82d9-9916b8b55675
+    Approval_type               type        = 3;
+}
+
+
+/** def.requirement.38f512e1-648c-4847-9143-9e76e9940747
+    [entity]
+    Heilmittel-Typ nach Heilmittel-Katalog
+*/
+message Remedy_type
+{
+    // def.requirement.8807e5b0-40e8-4f1c-94a3-cdabd2afd4d6
+    Entity_meta_data            meta                    = 100;
+
+    // def.requirement.33681b2e-1c29-4118-91c1-a4588e0abd2d
+    henara.proto.Uuid           remedy_type_id          = 1;
+
+    // def.requirement.894b7183-129b-408e-a67b-92fce11ee658 - Heilmittel auf Verordnung z.B 'KG', 'MT'
+    string                      name                    = 2;
+}
+
+
+/** def.requirement.39f7950d-a4d4-4a34-ac42-9113b64d2a26
+    [entity]
+    Heilmittel-Maßnahme nach Heilmittel-Katalog
+    Heilmittelpositionen konkretisieren Heilmittel und bilden die Ebene zur Festlegung des Preises.
+*/
+message Remedy_position
+{
+    // def.requirement.efebb1c0-41d5-4768-a6d7-d9b11f46e42e
+    Entity_meta_data            meta                    = 100;
+
+    // def.requirement.e99b4312-3ff7-4b9c-8227-297cb6fa9e03
+    henara.proto.Uuid           remedy_position_id      = 1;
+
+    // def.requirement.6f7f8ce2-e829-4e8a-b2c8-32c2207264c6 - Heilmittelpositionkennzeichen z.B '20501'
+    string                      name                    = 2;
+}
+
+
+/** def.requirement.45f0e7b0-dc90-47a9-b249-e7b2d31de603
+    [mix-in]
+
+    Preisinformation fuer selbst angelegte Position in privater Verordnung
+    z.B.:
+    Osteopathie, 20.50 EUR, ab 1.1.2015
+*/
+//message Price_info
+//{
+//    // def.requirement.9d483bf8-8ddf-40bc-b9db-41cf756308b0 - Identifikation der eigenen Heilmittelposition (entspricht RemedyPosition)
+//    string                      code                    = 1;
+//
+//    // def.requirement.0a5b775b-322b-48e2-9b6f-ed7dcaf645be - Beschreibung der Position
+//    string                      description             = 2;
+//
+//    // def.requirement.2ee30431-8adc-4c49-b52a-430d515284a6 - Betrag der Position
+//    double                      value                   = 3;
+//
+//    // def.requirement.487fe7a0-890a-4298-a4f0-5a560e267a0a - gültig ab
+//    henara.proto.Date           valid_from              = 4;
+//
+//    // def.requirement.b0857df7-2de1-4533-8456-dccf820ba35e - Steuersatz: z.B.: 0.0 / 0.07 / 0.19
+//    double                      tax                     = 5;
+//
+//    // def.requirement.430da139-b3bc-466d-94a5-a4245b50809a - Heilmittelgruppierung fuer die Position
+//    string                      group                   = 6;
+//}
+
+
+/** def.requirement.a95eb2eb-da97-4091-8617-7b8f5f32c9a4
+    [entity]
+
+    Position einer Verordnung
+*/
+message Prescription_item
+{
+    // def.requirement.2906baf3-2202-468c-aa9c-61d1b2030098
+    Entity_meta_data            meta                                    = 100;
+
+    // def.requirement.e837f57b-b05a-45be-b5aa-f82263956461
+    henara.proto.Uuid           prescription_item_id                    = 1;
+
+    // def.requirement.b0e1a1ec-14c9-4444-9f3c-b1536af9bf6f
+    henara.proto.Uuid           prescription_id                         = 2;
+
+    // def.requirement.bb2967b3-e28e-488d-a03f-5ddad6c79493
+    henara.proto.Uuid           remedy_type_id                          = 3;
+
+    // def.requirement.ac810089-3991-419b-ae9c-fcf088643bbd
+    henara.proto.Uuid           remedy_position_id                      = 4;
+
+    // def.requirement.cf08cc93-a979-443d-a33a-659deb2378f2 - Anzahl Sitzungen
+    int32                       number_of_therapies                     = 5;
+
+    // def.requirement.05fe5fdb-808b-4945-9874-c915e658e90f - minimale Anzahl Sitzungen pro Woche (Bei Podologie: Mindestwochenabstand) TODO?
+    int32                       minimum_number_of_therapies_per_week    = 6;
+
+    // def.requirement.f4508af9-37be-4b69-ae0b-3dd0892872ce - maximale Anzahl Sitzungen pro Woche (Bei Podologie: Maximalwochenabstand)
+    int32                       maximum_number_of_therapies_per_week    = 7;
+
+    /** def.requirement.2868354a-137b-4916-9383-63a16e3fd212
+        - Preis ergotherapeutische Schiene
+        - km-Angabe bei Wegegeld
+        - Anzahl der Zeitintervalle bei BG-Sitzungen
+        - Maximalpreisfaktor bei Privat und Kurbetrieb
+    */
+    optional double             value                                   = 8;
+
+    // def.requirement.bae2cb7b-d24d-4221-9174-5b66698d3a18
+    // Sitzung(en)
+//  repeated Appointment        therapies                               = 9;
+
+    // def.requirement.fb49cb2e-68b0-4076-9aa7-540b7e0119ff
+//  Price_info                  price_info                              = 9;
+}
+
+
+/** def.requirement.ef8c738c-8e1c-4b63-bb67-d25db0444da2
+    [entity]
+
+    Verordnung
+*/
+message Prescription
+{
+    // def.requirement.9b8b2f5b-232c-45b3-ba74-aa4b1bb1b4a8
+    Entity_meta_data meta = 100;
+
+    // def.requirement.afc74775-3948-42da-a689-5ecd1a454b3d
+    enum Prescription_type
+    {
+        empty_Prescription_type         =    0;
+
+        // Gesetzliche Heilmittelverordnungen
+        HVO13_2021                      =    1; // HVO 13 (HVO 13)
+        HVO18_2021                      =    2; // HVO 13 (HVO 13)
+        HVO14_2021                      =    5; // HVO 13 (HVO 13)
+        HVO13PodoSpangen_2021           =    8; // HVO 13 - Spangen (HVO 13 - Spangen)
+        HVO13Podo_2021                  =    9; // HVO 13 (HVO 13)
+        HVO13                           =   11; // HVO 13 vor 2021 (HVO 13)
+        HVO18                           =   12; // HVO 18 vor 2021 (HVO 18)
+        GesetzlichReha                  =   13; // Gesetzlich Rehasport (Gesetzl. RS)
+        GesetzlichFunktion              =   14; // Gesetzlich Funktionstraining (Gesetzl. FT)
+        HVO14                           =   15; // HVO 14 vor 2021 (HVO 14)
+        HVO13Podo                       =   19; // HVO 13 vor 2021 (HVO 13)
+
+        // Privat
+        PrivatRezept                    =   21; // Privatrezept (Privat)
+        PrivatErgo                      =   22; // Privat Ergotherapie (Prv. Ergo)
+        PrivatReha                      =   23; // Privat Rehasport (Prv. RS)
+        PrivatFunktion                  =   24; // Privat Funktionstraining (Prv. FT)
+        PrivatLogo                      =   25; // Privat Logopädie (Prv. Logo)
+        PrivatHeilpraktiker             =   28; // Private Behandlung (Privat)
+        PrivatVerein                    =   29; // Privat Verein (Verein)
+
+        // Bundeswehr
+        BundeswehrRezept                =   31; // Bundeswehr Physiotherapie vor 2021 (BW Physio)
+        BundeswehrErgo                  =   32; // Bundeswehr Ergotherapie vor 2021 (BW Ergo)
+        BundeswehrReha                  =   33; // Bundeswehr Rehasport (BW RS)
+        BundeswehrFunktion              =   34; // Bundeswehr Funktionstraining (BW FT)
+        BundeswehrLogo                  =   35; // Bundeswehr Logopädie vor 2021 (BW Logo)
+        BundeswehrPodo                  =   36; // Bundeswehr Podologie vor 2021 (BW Podo)
+        BundeswehrRezept_2021           = 2031; // Bundeswehr Physiotherapie (BW Physio)
+        BundeswehrErgo_2021             = 2032; // Bundeswehr Ergotherapie (BW Ergo)
+        BundeswehrLogo_2021             = 2035; // Bundeswehr Logopädie (BW Logo)
+        BundeswehrPodo_2021             = 2036; // Bundeswehr Podologie (BW Podo)
+
+        // Berufsgenossenschaft
+        BerufsgenossenschaftRezept      =   41; // Berufsgenossenschaft Physiotherapie (BG Physio)
+        BerufsgenossenschaftErgo        =   42; // Berufsgenossenschaft Ergotherapie (BG Ergo)
+        BerufsgenossenschaftReha        =   43; // Berufsgenossenschaft Rehasport (BG RS)
+        BerufsgenossenschaftFunktion    =   44; // Berufsgenossenschaft Funktionstraining (BG FT)
+        BerufsgenossenschaftLogo        =   45; // Berufsgenossenschaft Logopädie (BG Logo)
+        BerufsgenossenschaftPodo        =   46; // Berufsgenossenschaft Podologie (BG Podo)
+
+        // Versorgung nach Asylbewerberleistungsgesetz
+        AsylblGPhysio                   =   51; // AsylblG Physiotherapie vor 2021 (AsylblG Physio)
+        AsylblGErgo                     =   52; // AsylblG Ergotherapie vor 2021 (AsylblG Ergo)
+        AsylblGReha                     =   53; // AsylblG Rehasport vor 2021 (AsylblG RS)
+        AsylblGFunktion                 =   54; // AsylblG Funktionstraining vor 2021 (AsylblG FT)
+        AsylblGLogo                     =   55; // AsylblG Logopädie vor 2021 (AsylblG Logo)
+        AsylblGPodo                     =   56; // AsylblG Podologie vor 2021 (AsylblG Podo)
+        AsylblGPhysio_2021              = 2051; // AsylblG Physiotherapie (AsylblG Physio)
+        AsylblGErgo_2021                = 2052; // AsylblG Ergotherapie (AsylblG Ergo)
+        AsylblGReha_2021                = 2053; // AsylblG Rehasport (AsylblG RS)
+        AsylblGFunktion_2021            = 2054; // AsylblG Funktionstraining (AsylblG FT)
+        AsylblGLogo_2021                = 2055; // AsylblG Logopädie (AsylblG Logo)
+        AsylblGPodo_2021                = 2056; // AsylblG Podologie (AsylblG Podo)
+
+        // Heilfürsorge
+        HeilfuersorgeRezept             =   61; // Heilfürsorge Physiotherapie vor 2021 (HF Physio)
+        HeilfuersorgeErgo               =   62; // Heilfürsorge Ergotherapie vor 2021 (HF Ergo)
+        HeilfuersorgeReha               =   63; // Heilfürsorge Rehasport (HF RS)
+        HeilfuersorgeFunktion           =   64; // Heilfürsorge Funktionstraining (HF FT)
+        HeilfuersorgeLogo               =   65; // Heilfürsorge Logopädie vor 2021 (HF Logo)
+        HeilfuersorgePodo               =   66; // Heilfürsorge Podologie vor 2021 (HF Podo)
+        ZahnarztHF                      =   67; // Heilfürsorge Zahnarztüberweisung Physio (HF ZA Physio)
+        ZahnarztHFLogo                  =   68; // Heilfürsorge Zahnarztüberweisung Logo (HF ZA Logo)
+        ZahnarztHFErgo                  =   69; // Heilfürsorge Zahnarztüberweisung Ergo (HF ZA Ergo)
+        HeilfuersorgeRezept_2021        =  161; // Heilfürsorge Physiotherapie (HF Physio)
+        HeilfuersorgeErgo_2021          =  162; // Heilfürsorge Ergotherapie (HF Ergo)
+        HeilfuersorgeLogo_2021          = 2065; // Heilfürsorge Logopädie (HF Logo)
+        HeilfuersorgePodo_2021          = 2066; // Heilfürsorge Podologie (HF Podo)
+
+        // Rentenversicherung
+        DeutscheRentenversicherung      =   71; // Deutsche Rentenversicherung (DRV)
+
+        // Zahnarztüberweisung bis 30.06.2017
+        Zahnarzt                        =   16; // Zahnarztüberweisung bis 30.06.2017 Physio (ZAÜ Physio)
+        ZahnarztLogo                    =   17; // Zahnarztüberweisung bis 30.06.2017 Logo (ZAÜ Logo)
+        ZahnarztErgo                    =   18; // Zahnarztüberweisung bis 30.06.2017 Ergo (ZAÜ Ergo)
+
+        // Zahnärztliche Heilmittelverordnungen ab 01.07.2017
+        Zahnarzt2017                    =   81; // Zahnärztliche Heilmittelverordnung vor 2021 Physio (ZÄ HVO Physio)
+        Zahnarzt2017Logo                =   85; // Zahnärztliche Heilmittelverordnung vor 2021 Logo (ZÄ HVO Logo)
+        Zahnarzt2021                    = 2081; // Zahnärztliche Heilmittelverordnung Physio (ZÄ HVO Physio)
+        Zahnarzt2021Logo                = 2085; // Zahnärztliche Heilmittelverordnung Logo (ZÄ HVO Logo)
+
+        // Entlassmanagement
+        HVO13Entlass                    =   91; // HVO 13 Entlassmanagement vor 2021 (HVO 13 Entl.)
+        HVO18Entlass                    =   92; // HVO 18 Entlassmanagement vor 2021 (HVO 18 Entl.)
+        HVO14Entlass                    =   95; // HVO 14 Entlassmanagement vor 2021 (HVO 14 Entl.)
+        HVO13Entlass_2021               = 2091; // HVO 13 Entlassmanagement (HVO 13 Entl.)
+        HVO18Entlass_2021               = 2092; // HVO 13 Entlassmanagement (HVO 13 Entl.)
+        HVO14Entlass_2021               = 2095; // HVO 13 Entlassmanagement (HVO 13 Entl.)
+
+        // Frühförderungsverordnung
+        IFF_2021                        = 2101; // Frühförderungsverordnung (IFF)
+        IFF                             =  101; // Frühförderungsverordnung vor 2021 (IFF)
+
+        // Bundespolizei
+        BundespolizeiRezept             =  111; // Bundespolizei Physiotherapie vor 2021 (BP Physio)
+        BundespolizeiErgo               =  112; // Bundespolizei Ergotherapie vor 2021 (BP Ergo)
+        BundespolizeiReha               =  113; // Bundespolizei Rehasport vor 2021 (BP RS)
+        BundespolizeiFunktion           =  114; // Bundespolizei Funktionstraining vor 2021 (BP FT)
+        BundespolizeiLogo               =  115; // Bundespolizei Logopädie vor 2021 (BP Logo)
+        BundespolizeiPodo               =  116; // Bundespolizei Podologie vor 2021 (BP Podo)
+        ZahnarztBP                      =  117; // Bundespolizei Zahnarztüberweisung Physio (BP ZA Physio)
+        ZahnarztBPLogo                  =  118; // Bundespolizei Zahnarztüberweisung Logo (BP ZA Logo)
+        ZahnarztBPErgo                  =  119; // Bundespolizei Zahnarztüberweisung Ergo (BP ZA Ergo)
+        BundespolizeiRezept_2021        =  121; // Bundespolizei Physiotherapie (BP Physio)
+        BundespolizeiErgo_2021          =  122; // Bundespolizei Ergotherapie (BP Ergo)
+        BundespolizeiReha_2021          = 2113; // Bundespolizei Rehasport (BP RS)
+        BundespolizeiFunktion_2021      = 2114; // Bundespolizei Funktionstraining (BP FT)
+        BundespolizeiLogo_2021          = 2115; // Bundespolizei Logopädie (BP Logo)
+        BundespolizeiPodo_2021          = 2116; // Bundespolizei Podologie (BP Podo)
+
+        //Selbstzahler
+        SelbstzahlerPhysio              =  130; // Selbstzahler Physio (SZ Physio)
+        SelbstzahlerErgo                =  131; // Selbstzahler Ergo (SZ Ergo)
+        SelbstzahlerLogo                =  132; // Selbstzahler Logo (SZ Logo)
+        SelbstzahlerFunktion            =  133; // Selbstzahler Funktion (SZ Funktion)
+        SelbstzahlerPodo                =  136; // Selbstzahler Podo (SZ Podo)
+        SelbstzahlerMassage             =  137; // Selbstzahler Massage (SZ Massage)
+
+        //Kurarzt
+        HVO13Kurarzt                    =  140; // Kurarzt Physiotherapie (KA PT)
+        HVO18Kurarzt                    =  141; // Kurarzt Ergotherapie (KA ET)
+
+        // Beihilfe
+        BeihilfeRezept                  =  150; // Beihilferezept (Beihilfe)
+        BeihilfeErgo                    =  152; // Beihilfe Ergotherapie (BH. Ergo)
+        BeihilfeReha                    =  153; // Beihilfe Rehasport (BH. RS)
+        BeihilfeFunktion                =  154; // Beihilfe Funktionstraining (BH. FT)
+        BeihilfeLogo                    =  155; // Beihilfe Logopädie (BH. Logo)
+        BeihilfeHeilpraktiker           =  158; // Beihilfe Behandlung (Beihilfe)
+
+        // EAP
+        EAP                             =  200; // Erweiterte ambulante Physiotherapie (EAP)
+
+        // Rueckbildung
+        Geburtsbegleitung               =  300; // Geburtsvorbereitung und Rückbildungsgymnastik (Geburt)
+    }
+
+
+      ////////////////////////////////////////
+     // keys
+    //
+
+    // def.requirement.49e8c7e6-fba0-43b5-9b7b-8ad910b744ff - Globally unique identifier of the given Prescription
+    henara.proto.Uuid               prescription_id             = 1;
+
+    // def.requirement.3d8e1e6c-249a-4557-9303-10a6631ea2b7
+    henara.proto.Uuid               doctor_id                   = 2;
+
+    // def.requirement.813d1c21-41c1-40ad-94a1-ad953c47f9ae
+    henara.proto.Uuid               practice_id                 = 3;
+
+    // def.requirement.91805ffc-25bf-4227-ac59-78e646255f6f
+    henara.proto.Uuid               customer_id                 = 4;
+
+    // def.requirement.b1eba5de-a6ff-4e25-bc82-829d8275fa39
+    repeated henara.proto.Uuid      prescription_item_ids       = 5;
+
+    // def.requirement.c8aa9ceb-5a66-4470-9100-ef8ea964722c - Indikation - bei HVO-Rezepten Pflicht
+    henara.proto.Uuid               desease_classification_id   = 6;
+
+    // def.requirement.370b8e09-a2da-4c0a-acf6-324f07516445 - ICD10-Codes
+    repeated henara.proto.Uuid      icd10_ids                   = 7;
+
+
+
+
+      ////////////////////////////////////////
+     // properties
+    //
+
+    // def.requirement.9b96c123-1ef7-402a-8afb-b92ea5cc7324
+    Prescription_type               type                        = 10;
+
+    // def.requirement.ec2c13a8-0638-436c-a563-9b15671d2959
+    Prescription_options            options                     = 11;
+
+    // def.requirement.a806a0d7-f5dc-441c-8fc7-ce5969cc6ac6 - Verordnungsdatum
+    henara.proto.Date               prescribed_at               = 12;
+
+    // def.requirement.9730d871-4bfe-4ae7-b553-60815f2f241b - nur Rehasport
+    henara.proto.Date               begin_from                  = 13;
+
+    // def.requirement.94843e12-290f-4a20-9f60-bdd62fdb9153 - nur Rehasport
+    henara.proto.Date               begin_until                 = 14;
+
+    // def.requirement.1e64959b-f3ae-4e3d-bf63-522ea41b57b0 - nur Rehasport
+    henara.proto.Date               end_until                   = 15;
+
+    // def.requirement.010df781-a5db-4a72-a6b1-e988cdd723e4
+    string                          health_insurance_ik         = 16;
+
+    // def.requirement.303b97b8-25e0-4992-a653-8158d58be446
+    bool                            health_insurance_is_private = 17;
+
+    // def.requirement.d129f73a-671e-44e7-976c-c01d74ad432f - Diagnose - bei Privat Pflicht
+    string                          diagnosis                   = 18;
+
+    // def.requirement.db8521d9-18ec-4ce1-8f46-92f73f5d810a - Körperteil - zur genaueren Bestimmung des Regelfalls bei Physiotherapie
+    string                          body_part                   = 19;
+
+    // def.requirement.c404b5ad-b5d5-49e3-b83e-b5d7064e76c4
+    Approval                        Approval                    = 20;
+
+    // def.requirement.ea7ccf6c-71d4-4813-876a-2f12272d8769 - Berechneter Verordnungspreis
+ // double                          value                       = 21;
+}
+
+
+/** def.requirement.99f37824-8f61-44e8-a195-6afe80ad9293
+    [entity]
+    konkrete (Therapie-) Praxis
+*/
+message Practice
+{
+    // def.requirement.3898c7f0-4caf-49b2-a025-1cc016616f67
+    Entity_meta_data meta = 100;
+
+    // def.requirement.1af77cb5-190f-4fa0-b096-dd1bc83ca9d7
+    enum Profession
+    {
+        empty_Profession                    =   0;
+
+        Massage                             =  21; // Massage (MA)
+        Physiotherapie                      =  22; // Physiotherapie (PT)
+        Logopaedie                          =  23; // Logopädie (LO)
+        SonstigerSprachtherapeut            =  25; // Sonstiger Sprachtherapeut (LO)
+        Ergotherapie                        =  26; // Ergotherapie (ET)
+        Krankenhaus                         =  27; // Krankenhaus
+        Kurbetrieb                          =  28; // Kurbetrieb
+        SonstigeTherapeutischeHeilpersonen  =  29; // Sonstige therapeutische Heilpersonen
+        Rehasport                           =  61; // Rehasport (RS)
+        Funktionssport                      =  62; // Funktionssport (FS)
+        SonstigerLeistungserbringer         =  65; // Sonstiger Leistungserbringer
+        Fruehfoerderstellen                 =  68; // Sozialpädiatrische Zentren/Frühförderstellen
+        Podologie                           =  71; // Podologie (PO)
+        Heilpraktiker                       = 101; // Heilpraktiker (HP)
+    }
+
+    // def.requirement.e43d0a82-358f-439b-b743-c75ef8d64481
+    enum Region
+    {
+        Deutschland          =  0;
+
+        Baden_Wuerttemberg   =  1;
+        Bayern               =  2;
+        Bremen               =  4;
+        Hamburg              =  5;
+        Hessen               =  6;
+        Niedersachsen        =  7;
+        Nordrhein_Westfalen  =  8;
+        Rheinland_Pfalz      =  9;
+        Saarland             = 10;
+        Schleswig_Holstein   = 11;
+        Brandenburg          = 12;
+        Sachsen              = 13;
+        Sachsen_Anhalt       = 14;
+        Mecklenburg_Vorp     = 15;
+        Thueringen           = 16;
+        Nordrhein            = 20;
+        Westfalen_Lippe      = 21;
+        Berlin               = 23;
+
+        DeutschlandWest      = 24;
+        DeutschlandOst       = 25;
+    }
+
+
+    // def.requirement.a6e49c1e-1cb4-4e2f-bf0b-8c4176dcaef9 - Globally unique identifier for the given Practice
+    henara.proto.Uuid           practice_id                     = 1;
+
+    // def.requirement.fabf2848-5dac-43ba-b237-e120e443375f
+    string                      name                            = 2;
+
+    // def.requirement.d0b16344-3ec0-489b-91ec-afeab29d0d75 - Institutionskennzeichen (IK)
+    string                      practice_ik                     = 3;
+
+    // def.requirement.64445feb-06c4-4a33-961d-2db0738d8050
+    Profession                  profession                      = 4;
+
+    // def.requirement.0e68eb7c-28f1-4060-ac4a-5159553544bb
+    henara.proto.Uuid           region_id                       = 5;
+
+    // def.requirement.fcd5c2b8-a5b4-4c39-bdb0-06469c4834a0
+    henara.proto.Uuid           location_id                     = 6;
+}

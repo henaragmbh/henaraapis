@@ -1,0 +1,47 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+#     http:
+
+processors:
+  batch:
+
+exporters:
+# otlp:
+#   endpoint: otelcol:4317
+  file:
+    path: /var/otel/hws.otel.json
+    
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+#     exporters: [otlp]
+      exporters: [file]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+#     exporters: [otlp]
+      exporters: [file]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+#     exporters: [otlp]
+      exporters: [file]
+  telemetry:
+    logs:
+      level: debug
+      initial_fields:
+        service: hws_otel_collector
+#   metrics:
+#     level: detailed
+#     address: 0.0.0.0:8888
