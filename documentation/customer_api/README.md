@@ -14,10 +14,10 @@ So you need a docker host. Among various methods you could install [Docker Deskt
 With the files *docker-compose.yml* and *config.env* (provided in this folder), and *config.env* updated to your needs, you start the test system:
 
 ```console
-docker login --username <your_user_id> --password <your_password>
+docker login --username henara --password <your_access_token>
 ```
 
-<sub>*The user-id and password needed to pull the docker image of our service is provided to you by us.</sub>
+<sub>*The access token needed to pull the docker image of our service is provided to you by us.</sub>
 
 and
 
