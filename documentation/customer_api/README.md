@@ -54,17 +54,15 @@ The provided test system defines a file mapping in *docker-compose.yml* and the 
 ## Authentication
 
 Each call to the gRPC-API requires authentication.
-To authenticate, clients use the HTTP-header *"Authorization: Basic <access_token>"*. Technically in gRPC this is a value in the metadata of the request.
+To authenticate, clients use the HTTP-header *"access_token: <access_token>"*. In gRPC this is a value in the metadata of the request.
 
 The access token is a base64-encoded GUID which is set in the services configuration *config.env*.
 
-As an example, the online tool https://toolslick.com/conversion/data/guid works fine for GUID format conversions.
+As an example, [this online tool](https(://toolslick.com/conversion/data/guid) works fine for GUID format conversions.
 
 When using Postman for API testing, metadata are editable within the Postman UI.
 
-Please refer to the general gRPC documentation or vendor specific documentation on how to edit call metadata.
-
-https://learn.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/channel-credentials
+Please refer to the general gRPC documentation or [vendor specific documentation](https://learn.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/channel-credentials) on how to edit call metadata.
 
 
 ## Debugging
