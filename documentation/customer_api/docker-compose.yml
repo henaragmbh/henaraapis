@@ -61,6 +61,8 @@ services:
   customer_service:
     image: henara/customer_service:${CUSTOMER_SERVICE_VERSION}
     restart: unless-stopped
+    volumes:
+      - ./localhost.pfx:/etc/localhost.pfx
     ports:
       - ${CUSTOMER_SERVICE_grpc__port}:${CUSTOMER_SERVICE_grpc__port}
     networks:
