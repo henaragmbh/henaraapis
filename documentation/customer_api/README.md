@@ -47,7 +47,7 @@ openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -nod
 openssl pkcs12 -export -in localhost.crt -inkey localhost.key -out localhost.pfx
 ```
 
-The customer service application requires information about the *.pfx* file via the configuration key *grpc:pfx_path* and *grpc:pfx_password*.
+The customer service application requires information about the *.pfx* file via the configuration key *grpc:pfx_path* and *grpc:pfx_password*.
 The provided test system defines a file mapping in *docker-compose.yml* and the service configuration in *config.env*.
 
 
