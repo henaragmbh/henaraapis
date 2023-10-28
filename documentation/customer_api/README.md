@@ -37,7 +37,7 @@ You might restore a database backup to get some data to play with.
 
 The gRPC-API uses server authentication SSL/TLS transport encryption using a private key and certificate.
 
-In case you access the test system at localhost, keys and a self signed certificate can be generated like this:
+In case you access the test system at *localhost*, keys and a self signed certificate can be generated like this:
 
 ```bash
 # generate key and certificate
@@ -46,6 +46,8 @@ openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -nod
 # place keys and certificate into a .pfx container
 openssl pkcs12 -export -in localhost.crt -inkey localhost.key -out localhost.pfx
 ```
+
+The certificate can be added to the client systems collection of trusted root certificates.
 
 The customer service application requires information about the *.pfx* file via the configuration key *grpc:pfx_path* and *grpc:pfx_password*.
 The provided test system defines a file mapping in *docker-compose.yml* and the service configuration in *config.env*.
@@ -56,11 +58,11 @@ The provided test system defines a file mapping in *docker-compose.yml* and the 
 Each call to the gRPC-API requires authentication.
 To authenticate, clients use the HTTP-header *"access_token: <access_token>"*. In gRPC this is a value in the metadata of the request.
 
-The access token is a base64-encoded GUID which is set in the services configuration *config.env*.
+The access token is a base64-encoded GUID which is set in the test services configuration *config.env*.
 
-As an example, [this online tool](https(://toolslick.com/conversion/data/guid) works fine for GUID format conversions.
+[This online tool](https://toolslick.com/conversion/data/guid) works fine for GUID format conversions.
 
-When using Postman for API testing, metadata are editable within the Postman UI.
+When using *Postman* for API testing, metadata are editable within the UI.
 
 Please refer to the general gRPC documentation or [vendor specific documentation](https://learn.microsoft.com/en-us/dotnet/architecture/grpc-for-wcf-developers/channel-credentials) on how to edit call metadata.
 
@@ -71,4 +73,4 @@ Please refer to the general gRPC documentation or [vendor specific documentation
 
 You can call the API without the need to implement an API client by using a testing tool like [Postman](https://www.postman.com) which kindly supports gRPC.
 
-When using Postman for API testing, metadata are editable within the Postman UI.
+When using *Postman* for API testing, metadata are editable within the UI.
