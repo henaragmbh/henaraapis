@@ -35,7 +35,7 @@ You might restore a database backup to get some data to play with.
 
 ## Encryption
 
-The gRPC-API does server authentication SSL/TLS transport encryption using a private key and a certificate.
+The gRPC-API performs server authentication SSL/TLS transport encryption using a private key and a certificate.
 
 In case you access the test system at *localhost*, keys and a self signed certificate can be generated like this:
 
