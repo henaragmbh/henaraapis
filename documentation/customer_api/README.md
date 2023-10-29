@@ -25,13 +25,13 @@ and
 docker compose --project-name customer_service_system --file docker-compose.yml --env-file config.env up
 ```
 
-If no error arises, the system runs and is already fully functional.
+If no error arises, the system runs but requires importing a database backup.
 
 
 ## Deploying Test Data
 
 The test system contains a MS SQL Server.
-You might restore a database backup to get some data to play with.
+You need to restore a database backup to get some data to play with.
 
 ## Encryption
 
