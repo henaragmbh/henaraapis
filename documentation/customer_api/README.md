@@ -35,7 +35,7 @@ You might restore a database backup to get some data to play with.
 
 ## Encryption
 
-The gRPC-API uses server authentication SSL/TLS transport encryption using a private key and certificate.
+The gRPC-API does server authentication SSL/TLS transport encryption using a private key and a certificate.
 
 In case you access the test system at *localhost*, keys and a self signed certificate can be generated like this:
 
@@ -49,7 +49,7 @@ openssl pkcs12 -export -in localhost.crt -inkey localhost.key -out localhost.pfx
 
 The certificate can be added to the client systems collection of trusted root certificates.
 
-The customer service application requires information about the *.pfx* file via the configuration key *grpc:pfx_path* and *grpc:pfx_password*.
+The customer service application requires information about the *.pfx* file (containing the private key and the certificate) via the configuration key *grpc:pfx_path* and *grpc:pfx_password*.
 The provided test system defines a file mapping in *docker-compose.yml* and the service configuration in *config.env*.
 
 
