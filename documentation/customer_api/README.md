@@ -58,7 +58,7 @@ The provided test system defines a file mapping in *docker-compose.yml* and the 
 Each call to the gRPC-API requires authentication.
 To authenticate, clients use the HTTP-header *"access_token: <access_token>"*. In gRPC this is a value in the metadata of the request.
 
-The access token is a base64-encoded GUID which is set in the test services configuration *config.env*.
+The access token is a base64-encoded GUID which is set in the test services *config.env*.
 
 [This online tool](https://toolslick.com/conversion/data/guid) works fine for GUID format conversions.
 
