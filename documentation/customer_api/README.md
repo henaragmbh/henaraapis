@@ -30,7 +30,7 @@ If no error arises, the system runs but requires importing a database backup.
 
 ## Deploying Test Data
 
-The test system contains a MS SQL Server.
+The test system contains an MS SQL Server.
 You need to restore a database backup to get some data to play with.
 
 ## Encryption
