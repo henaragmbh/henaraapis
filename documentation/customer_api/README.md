@@ -31,7 +31,7 @@ If no error arises, the system runs but requires importing a database backup.
 ## Deploying Test Data
 
 The test system contains an MS SQL Server.
-You need to restore a database backup to get some data to play with.
+You need to restore a database backup into a database named *testdb*.
 
 ## Encryption
 
