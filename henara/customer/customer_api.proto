@@ -47,20 +47,24 @@ service customer_API
 
 
       ////////////////////////////////////////////////////////////////////////////////
-     // CRUD of webhook_endpoint
+     // CR_D of webhook_endpoint
     //
 
     /// def.requirement.e2a7bf8b-7614-4b58-a4db-237030a3dc0a
-    rpc webhook_endpoint_create (webhook_endpoint_create_Request) returns (webhook_endpoint_create_Response); // NYI
+    rpc webhook_endpoint_create     (webhook_endpoint_create_Request)   returns (webhook_endpoint_create_Response); // NYI
 
     /// def.requirement.9e72da70-42a2-4f25-a702-3c051e7fb516
-    rpc webhook_endpoint_read   (webhook_endpoint_read_Request)   returns (webhook_endpoint_read_Response); // NYI
+    rpc webhook_endpoint_read       (webhook_endpoint_read_Request)     returns (webhook_endpoint_read_Response); // NYI
+
+    /// def.requirement.def22e31-84cf-454a-8387-8357a0185de9
+    rpc webhook_endpoint_read_all   (webhook_endpoint_read_all_Request) returns (webhook_endpoint_read_all_Response); // NYI
 
     /// def.requirement.cdac0902-d9bb-4708-b16a-b9c0dfb47216
-    rpc webhook_endpoint_update (webhook_endpoint_update_Request) returns (webhook_endpoint_update_Response); // NYI
+    // webhook_endpoints are immutable
 
     /// def.requirement.2e56b82a-fe5b-48c4-b4f3-0ac77f7424d1
-    rpc webhook_endpoint_delete (webhook_endpoint_delete_Request) returns (webhook_endpoint_delete_Response); // NYI
+    rpc webhook_endpoint_delete     (webhook_endpoint_delete_Request)   returns (webhook_endpoint_delete_Response); // NYI
+
 
 
       ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +73,13 @@ service customer_API
 
     /// def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c - read entities in a bulk
     rpc query           (query_Request)           returns (query_Response);
+
+    /** def.requirement.806bbca3-9f08-4176-85d4-9aff890e3c54
+        This server streaming call allows asynchronous delivery of messages to the client.
+        If enabled in the Request message, the Service sends updated entities to the client after changes
+        had been applied to these entities.
+    */
+    rpc listen          (listen_Request)          returns (stream listen_Response); // NYI
 }
 
 
@@ -83,85 +94,118 @@ message hello_Response
 }
 
 
-message customer_create_Request         {Customer          customer            = 1;} message customer_create_Response        {}
-message customer_read_Request           {henara.proto.Uuid customer_id         = 1;} message customer_read_Response          {Customer customer = 1;}
-message customer_update_Request         {Customer          customer            = 1;} message customer_update_Response        {}
-message customer_delete_Request         {henara.proto.Uuid customer_id         = 1;} message customer_delete_Response        {}
+message customer_create_Request             {Customer          customer            = 1;} message customer_create_Response           {}
+message customer_read_Request               {henara.proto.Uuid customer_id         = 1;} message customer_read_Response             {Customer customer = 1;}
+message customer_update_Request             {Customer          customer            = 1;} message customer_update_Response           {}
+message customer_delete_Request             {henara.proto.Uuid customer_id         = 1;} message customer_delete_Response           {}
 
 
-message appointment_create_Request      {Appointment       appointment         = 1;} message appointment_create_Response     {}
-message appointment_read_Request        {henara.proto.Uuid appointment_id      = 1;} message appointment_read_Response       {Appointment appointment = 1;}
-message appointment_update_Request      {Appointment       appointment         = 1;} message appointment_update_Response     {}
-message appointment_delete_Request      {henara.proto.Uuid appointment_id      = 1;} message appointment_delete_Response     {}
+message appointment_create_Request          {Appointment       appointment         = 1;} message appointment_create_Response        {}
+message appointment_read_Request            {henara.proto.Uuid appointment_id      = 1;} message appointment_read_Response          {Appointment appointment = 1;}
+message appointment_update_Request          {Appointment       appointment         = 1;} message appointment_update_Response        {}
+message appointment_delete_Request          {henara.proto.Uuid appointment_id      = 1;} message appointment_delete_Response        {}
 
-message webhook_endpoint_create_Request {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_create_Response{}
-message webhook_endpoint_read_Request   {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_read_Response  {Webhook_endpoint web_hook_endpoint = 1;}
-message webhook_endpoint_update_Request {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_update_Response{}
-message webhook_endpoint_delete_Request {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_delete_Response{}
+message webhook_endpoint_create_Request     {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_create_Response   {}
+message webhook_endpoint_read_Request       {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_read_Response     {Webhook_endpoint web_hook_endpoint = 1;}
+message webhook_endpoint_read_all_Request   {                                          } message webhook_endpoint_read_all_Response {repeated Webhook_endpoint web_hook_endpoint = 1;}
+message webhook_endpoint_delete_Request     {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_delete_Response   {}
 
 
-message query_Request
+
+// def.requirement.8512beeb-a486-40d1-8af0-75173fc2287d
+message Selector
 {
-    message Selector
+    enum Entity_kind
     {
-        enum Kind
-        {
-            empty_Sort                =  0;
-            Customer                  =  1;
-            Therapist                 =  2;
-            Room                      =  3;
-            Appointment               =  4;
-            Custom_health_insurance   =  5;
-            Doctor                    =  6;
-            Approval                  =  7;
-            Remedy_type               =  8;
-            Remedy_position           =  9;
-            Prescription_item         = 10;
-            Prescription              = 11;
-            Practice                  = 12;
-        }
-
-        Kind                        kind                            = 1;
-        bool                        include_this_kind               = 2;
-
-        /** def.requirement.36d18a0f-bfde-4b17-a4cd-05495a097d3e
-            If TRUE, foreign keys to this Kind are inserted to entities that reference these Kind.
-            Otherwise those references are omitted.
-
-            Use Case.
-                If entities of Kind 'Prescription' are selected with 'include_this_kind' enabled
-                and entities of Kind 'Prescription_item' are selected with 'include_this_kind' disabled but with 'include_references_to_this_kind' enabled,
-                the the collection Prescription::prescription_item_ids gets populated.
-                This enables the client to later query particular entities by their key.
-        */
-        bool                        include_references_to_this_kind = 3; // NYI
-
-
-        // IDs of this Kind to query. If EMPTY, all entities of this Kind get addressed
-        repeated henara.proto.Uuid  entity_ids                      = 4;
+        empty_Kind                =  0;
+        Customer                  =  1;
+        Therapist                 =  2;
+        Room                      =  3;
+        Appointment               =  4;
+        Custom_health_insurance   =  5;
+        Doctor                    =  6;
+        Approval                  =  7;
+        Remedy_type               =  8;
+        Remedy_position           =  9;
+        Prescription_item         = 10;
+        Prescription              = 11;
+        Practice                  = 12;
     }
 
+    Entity_kind                 kind                            = 1;
+    bool                        include_this_kind               = 2;
+
+    /** def.requirement.36d18a0f-bfde-4b17-a4cd-05495a097d3e
+        If TRUE, foreign keys to this Kind are inserted to entities that reference these Kind.
+        Otherwise those references are omitted.
+
+        Use Case.
+            If entities of Kind 'Prescription' are selected with 'include_this_kind' enabled
+            and entities of Kind 'Prescription_item' are selected with 'include_this_kind' disabled but with 'include_references_to_this_kind' enabled,
+            the the collection Prescription::prescription_item_ids gets populated.
+            This enables the client to later query particular entities by their key.
+    */
+    bool                        include_references_to_this_kind = 3; // NYI
+
+
+    // IDs of this Kind to query. If EMPTY, all entities of this Kind get addressed
+    repeated henara.proto.Uuid  entity_ids                      = 4;
+}
+
+
+/** def.requirement.50ba94c2-b17e-4d96-8585-1a9e84c28e25
+    Flat lists of the entities.
+    Entities contain foreign keys which tell about associated entities.
+*/
+message Entities
+{
+    repeated Appointment                appointments            =  1;
+    repeated Approval                   approvals               =  2;
+    repeated Customer                   customers               =  3;
+    repeated Doctor                     doctors                 =  4;
+    repeated Practice                   practices               =  5;
+    repeated Prescription               prescriptions           =  6;
+    repeated Prescription_item          prescription_items      =  7;
+    repeated Remedy_position            remedy_positions        =  8;
+    repeated Remedy_type                remedy_types            =  9;
+    repeated Room                       rooms                   = 10;
+    repeated Therapist                  therapists              = 11;
+}
+
+
+
+// def.requirement.cc34e526-8631-4e1a-ab0f-80aafe31330b
+message query_Request
+{
     repeated Selector               selectors               = 1;
     optional henara.proto.Timepoint only_what_changed_since = 2; // NYI
 }
 
+// def.requirement.93e7c097-7c09-4af0-af10-dd970e3367aa
 message query_Response
 {
     /** def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c
-        A query returns flat lists of the addressed entities.
-        Entities contain foreign keys which tell about associated entities.
+        A query returns flat lists of the selected entities.
     */
-    repeated Appointment                appointments            =  1;
-    repeated Approval                   approvals               =  2; // NYI
-    repeated Customer                   customers               =  3;
-    repeated Doctor                     doctors                 =  4; // NYI
-    repeated Practice                   practices               =  5; // NYI
-    repeated Prescription               prescriptions           =  6; // NYI
-    repeated Prescription_item          prescription_items      =  7; // NYI
-    repeated Remedy_position            remedy_positions        =  8; // NYI
-    repeated Remedy_type                remedy_types            =  9; // NYI
-    repeated Room                       rooms                   = 10; // NYI
-    repeated Therapist                  therapists              = 11; // NYI
+    Entities                entities        = 1;
 
-    henara.proto.Timepoint              execution_time          = 30;
+    /** def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c
+        A query returns flat lists of the selected entities.
+    */
+    henara.proto.Timepoint  snapshot_time   = 2;
+}
+
+
+
+// def.requirement.cc34e526-8631-4e1a-ab0f-80aafe31330b
+message listen_Request
+{
+    repeated Selector selectors = 1;
+}
+
+// def.requirement.93e7c097-7c09-4af0-af10-dd970e3367aa
+message listen_Response
+{
+    Entities                entities       = 1;
+    henara.proto.Timepoint  snapshot_time  = 2;
 }
