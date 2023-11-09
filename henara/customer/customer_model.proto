@@ -32,32 +32,17 @@ message Entity_meta_data
 */
 message Webhook_endpoint
 {
-    // def.requirement.c42e90d8-5705-48f8-84ed-18a2f7686e67 - meta data
-    Entity_meta_data            meta                            = 100;
-
     // def.requirement.4762660f-acf6-4580-9d01-59d10a42c84c - Unique identifier for the object.
-    henara.proto.Uuid           webhook_endpoint_id             = 2;
-
-    // def.requirement.4054dcc4-b220-4073-b6fa-481cdf40bd40 - The API version events are rendered as for this webhook endpoint.
-    string                      api_version                     = 3;
-
-    // def.requirement.ae040bf3-2c6d-45b5-a85a-edba0adccb7a - An optional description of what the webhook is used for.
-    string                      description                     = 4;
-
-    // def.requirement.75037db4-f930-4001-9195-fb518187807b - The list of events to enable for this endpoint. [’*’] indicates that all events are enabled, except those that require explicit selection.
-    repeated string             enabled_events                  = 5;
-
-    // def.requirement.aa4b0769-5c2a-4dd0-a544-5de6c1a9f9a1 - Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
-    repeated string             tags                            = 6;
-
-    // def.requirement.595f753d-11b4-4c66-816d-d76eefaec017 - The endpoints secret, used to generate webhook signatures. Only returned at creation.
-    string                      secret                          = 7;
-
-    // def.requirement.d20bbd29-6ce7-45b8-b3d0-4218cc649447 - The status of the webhook. It can be enabled or disabled.
-    bool                        is_enabled                      = 8;
+    henara.proto.Uuid           webhook_endpoint_id             = 1;
 
     // def.requirement.f650d06f-1b3a-4646-8afc-a43baaf14aaf - The URL of the webhook endpoint.
-    string                      url                             = 9;
+    string                      url                             = 2;
+
+    // def.requirement.1b28c544-e989-4cd8-9e0a-f811855e604d - If TRUE, changes to Customers get notified
+    bool                        notify_change_of_customers      = 3;
+
+    // def.requirement.efe08d2b-7ccf-4c11-b450-4fe0e135f670 - If TRUE, changes to Appointments get notified
+    bool                        notify_change_of_appointments   = 4;
 }
 
 

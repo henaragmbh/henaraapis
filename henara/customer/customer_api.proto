@@ -8,10 +8,6 @@ import "henara/common/types.proto";
 
 service customer_API
 {
-    /// def.requirement.8fd06d41-8cb4-4816-a5aa-97cd3040658a - simple test call
-    rpc hello           (hello_Request)           returns (hello_Response);
-
-
       ////////////////////////////////////////////////////////////////////////////////
      // CRUD of customer
     //
@@ -80,6 +76,28 @@ service customer_API
         had been applied to these entities.
     */
     rpc listen          (listen_Request)          returns (stream listen_Response); // NYI
+
+
+
+      ////////////////////////////////////////////////////////////////////////////////
+     // testing
+    //
+
+    /// def.requirement.8fd06d41-8cb4-4816-a5aa-97cd3040658a - simple test call
+    rpc hello           (hello_Request)           returns (hello_Response);
+
+
+    /*  def.requirement.92ac130f-b66d-4824-9857-b7cfadc6ddcd
+        Set the modification time af the targeted customer to the current time.
+        As a result, customer tracking webhooks should get notified.
+    */
+    rpc customer_touch (customer_touch_Request) returns (customer_touch_Response);
+
+    /*  def.requirement.831bc675-624a-44d6-84d4-46f34715f26c
+        Set the modification time af the targeted appointment to the current time.
+        As a result, appointment tracking webhooks should get notified.
+    */
+    rpc appointment_touch (appointment_touch_Request) returns (appointment_touch_Response);
 }
 
 
@@ -92,6 +110,9 @@ message hello_Response
 {
     string      greeting_text = 1;
 }
+
+message customer_touch_Request              {henara.proto.Uuid customer_id         = 1;} message customer_touch_Response           {}
+message appointment_touch_Request           {henara.proto.Uuid appointment_id      = 1;} message appointment_touch_Response        {}
 
 
 message customer_create_Request             {Customer          customer            = 1;} message customer_create_Response           {}
