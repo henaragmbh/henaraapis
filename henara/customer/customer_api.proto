@@ -199,7 +199,14 @@ message Entities
 message query_Request
 {
     repeated Selector               selectors               = 1;
-    optional henara.proto.Timepoint only_what_changed_since = 2; // NYI
+
+    /** def.requirement.a11f4486-eaf7-49f1-b7e6-65611d1573c7
+        Query only entities with a modification time equal or newer than this value (incremental sync).
+        If omitted, all selected entities get returned (full sync).
+
+        \see def.requirement.ea931110-87e5-473f-9a9c-5829761ef628
+    */
+    optional henara.proto.Timepoint only_what_changed_since = 2;
 }
 
 // def.requirement.93e7c097-7c09-4af0-af10-dd970e3367aa
@@ -210,8 +217,13 @@ message query_Response
     */
     Entities                entities        = 1;
 
-    /** def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c
-        A query returns flat lists of the selected entities.
+    /** def.requirement.ea931110-87e5-473f-9a9c-5829761ef628
+        The timepoint of the state the entities got queried of.
+        If at the next invocation of rpc 'query', this value gets assigned to
+        the attribute 'query_Request.only_what_changed_since', only entities
+        with an equal or newer modification time get returned by the query.
+        Using this method the client can incrementally synchronize its data replication.
+        This implies that the client must keep track of the last value of this attribute.
     */
     henara.proto.Timepoint  snapshot_time   = 2;
 }
