@@ -8,6 +8,25 @@ import "henara/common/types.proto";
     Instanzen von [mix-in] werden in [entity]-Instanzen, welche ihrerseits über eine ID verfügen, eingebettet.
 */
 
+/** def.requirement.ddbab3ae-04a0-4867-80b9-b4f2944e1acf
+*/
+enum Entity_kind
+{
+    entity_kind_empty                     =  0;
+    entity_kind_Customer                  =  1;
+    entity_kind_Therapist                 =  2;
+    entity_kind_Room                      =  3;
+    entity_kind_Appointment               =  4;
+    entity_kind_Custom_health_insurance   =  5;
+    entity_kind_Doctor                    =  6;
+    entity_kind_Approval                  =  7;
+    entity_kind_Remedy_type               =  8;
+    entity_kind_Remedy_position           =  9;
+    entity_kind_Prescription_item         = 10;
+    entity_kind_Prescription              = 11;
+    entity_kind_Practice                  = 12;
+}
+
 
 /** def.requirement.fc0ad32c-de87-45a6-8799-697c682afb00
     [mix-in]
@@ -43,6 +62,9 @@ message Webhook_endpoint
 
     // def.requirement.efe08d2b-7ccf-4c11-b450-4fe0e135f670 - If TRUE, changes to Appointments get notified
     bool                        notify_change_of_appointments   = 4;
+
+    // def.requirement.02f7b740-b0cb-4c49-8650-471a6f387bf1 - If TRUE, changes to Therapists get notified
+    bool                        notify_change_of_therapists     = 5;
 }
 
 
@@ -273,11 +295,29 @@ message Therapist
     // def.requirement.45749e5c-4a83-4e10-8e9f-24bc1a88e2f2
     Entity_meta_data            meta                            = 100;
 
+      ////////////////////////////////////////
+     // keys
+    //
+
     // def.requirement.ec3e03c2-2fc9-458e-b64c-3e6fe7a5ffaf - Globally unique identifier for the given Therapist
     henara.proto.Uuid           therapist_id                    = 1;
 
-    // def.requirement.0eb52b0c-a77b-4564-bc37-78b5904cce5a- menschenlesbare Kurzform
+    // def.requirement.0fbb049b-b2cc-4828-b882-a448074ef1b3
+    henara.proto.Uuid           practice_id                     = 10;
+
+    // def.requirement.0fbb049b-b2cc-4828-b882-a448074ef1b3
+    henara.proto.Uuid           practice_group_id               = 11;
+
+
+      ////////////////////////////////////////
+     // properties
+    //
+
+    // def.requirement.0eb52b0c-a77b-4564-bc37-78b5904cce5a- menschenlesbare Kurzform (deprecated)
     string                      short_description               = 2;
+
+    // def.requirement.fd7123e8-ae80-4674-b646-e9ccc008d442
+    Person                      person                          = 3;
 }
 
 

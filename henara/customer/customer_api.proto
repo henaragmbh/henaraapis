@@ -43,6 +43,23 @@ service customer_API
 
 
       ////////////////////////////////////////////////////////////////////////////////
+     // CRUD of therapist
+    //
+
+    /// def.requirement.9faed5a5-526b-4dba-97b2-4a74ced96bc9
+    rpc therapist_create (therapist_create_Request) returns (therapist_create_Response); // NYI
+
+    /// def.requirement.5f7d186b-f0e1-4290-ab4f-f376c748f571
+    rpc therapist_read   (therapist_read_Request)   returns (therapist_read_Response);
+
+    /// def.requirement.9c9612e5-4d0e-4856-abac-1ee6fc9e4414
+    rpc therapist_update (therapist_update_Request) returns (therapist_update_Response); // NYI
+
+    /// def.requirement.009f81e7-32b6-4b22-9f9b-48d94ddc499c
+    rpc therapist_delete (therapist_delete_Request) returns (therapist_delete_Response); // NYI
+
+
+      ////////////////////////////////////////////////////////////////////////////////
      // CR_D of webhook_endpoint
     //
 
@@ -87,17 +104,23 @@ service customer_API
     rpc hello           (hello_Request)           returns (hello_Response);
 
 
-    /*  def.requirement.92ac130f-b66d-4824-9857-b7cfadc6ddcd
+    /*  def.requirement.92ac130f-b66d-4824-9857-b7cfadc6ddcd (deprecated)
         Set the modification time af the targeted customer to the current time.
         As a result, customer tracking webhooks should get notified.
     */
     rpc customer_touch (customer_touch_Request) returns (customer_touch_Response);
 
-    /*  def.requirement.831bc675-624a-44d6-84d4-46f34715f26c
+    /*  def.requirement.831bc675-624a-44d6-84d4-46f34715f26c (deprecated)
         Set the modification time af the targeted appointment to the current time.
         As a result, appointment tracking webhooks should get notified.
     */
     rpc appointment_touch (appointment_touch_Request) returns (appointment_touch_Response);
+
+    /*  def.requirement.3968dae1-bc13-4451-aa31-229bcb62ea8b
+        Set the modification time af the targeted entity to the current time.
+        As a result, webhooks that track the entity should get notified.
+    */
+    rpc touch (touch_Request) returns (touch_Response);
 }
 
 
@@ -111,8 +134,11 @@ message hello_Response
     string      greeting_text = 1;
 }
 
-message customer_touch_Request              {henara.proto.Uuid customer_id         = 1;} message customer_touch_Response           {}
-message appointment_touch_Request           {henara.proto.Uuid appointment_id      = 1;} message appointment_touch_Response        {}
+message customer_touch_Request              {henara.proto.Uuid customer_id         = 1;} message customer_touch_Response            {}
+message appointment_touch_Request           {henara.proto.Uuid appointment_id      = 1;} message appointment_touch_Response         {}
+
+message touch_Request                       {henara.proto.Uuid entity_id = 1; Entity_kind kind = 2;}
+message touch_Response                      {}
 
 
 message customer_create_Request             {Customer          customer            = 1;} message customer_create_Response           {}
@@ -120,11 +146,15 @@ message customer_read_Request               {henara.proto.Uuid customer_id      
 message customer_update_Request             {Customer          customer            = 1;} message customer_update_Response           {}
 message customer_delete_Request             {henara.proto.Uuid customer_id         = 1;} message customer_delete_Response           {}
 
-
 message appointment_create_Request          {Appointment       appointment         = 1;} message appointment_create_Response        {}
 message appointment_read_Request            {henara.proto.Uuid appointment_id      = 1;} message appointment_read_Response          {Appointment appointment = 1;}
 message appointment_update_Request          {Appointment       appointment         = 1;} message appointment_update_Response        {}
 message appointment_delete_Request          {henara.proto.Uuid appointment_id      = 1;} message appointment_delete_Response        {}
+
+message therapist_create_Request            {Therapist         therapist           = 1;} message therapist_create_Response          {}
+message therapist_read_Request              {henara.proto.Uuid therapist_id        = 1;} message therapist_read_Response            {Therapist therapist = 1;}
+message therapist_update_Request            {Therapist         therapist           = 1;} message therapist_update_Response          {}
+message therapist_delete_Request            {henara.proto.Uuid therapist_id        = 1;} message therapist_delete_Response          {}
 
 message webhook_endpoint_create_Request     {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_create_Response   {}
 message webhook_endpoint_read_Request       {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_read_Response     {Webhook_endpoint web_hook_endpoint = 1;}
@@ -136,7 +166,7 @@ message webhook_endpoint_delete_Request     {henara.proto.Uuid webhook_endpoint_
 // def.requirement.8512beeb-a486-40d1-8af0-75173fc2287d
 message Selector
 {
-    enum Entity_kind
+    enum Entity_kind // (deprecated - going to be replaced by henara.customer.proto.Entity_kind)
     {
         empty_Kind                =  0;
         Customer                  =  1;
@@ -172,6 +202,10 @@ message Selector
     // IDs of this Kind to query. If EMPTY, all entities of this Kind get addressed
     repeated henara.proto.Uuid  entity_ids                      = 4;
 }
+
+
+
+
 
 
 /** def.requirement.50ba94c2-b17e-4d96-8585-1a9e84c28e25
