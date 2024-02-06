@@ -377,6 +377,33 @@ message Appointment
 
     // def.requirement.a0b5ef8c-8c79-4350-ad0f-6c882787818f
     repeated henara.proto.Uuid      prescription_item_ids       = 10;
+
+
+    // def.requirement.29a2ce6e-c02b-4c21-a825-a56908f46db8
+    enum BookingState
+    {
+        pending         = 0; // Entscheidung ausstehend
+        declined        = 1; // abgelehnt
+        accepted        = 2; // akzeptiert
+        cancelled       = 3; // storniert (durch Teilnehmer oder Therapeut oder ...)
+    }
+
+    // def.requirement.053be870-bb81-4924-93fd-920000d90880
+    BookingState                    booking_state               = 11;
+
+    // def.requirement.ef3e91ec-93df-4989-9c7a-b7287e2cb9af
+    enum ParticipationState
+    {
+        pending         = 0; // Status noch nicht bekannt
+        succeeded       = 1; // hat erfolgreich stattfunden
+        missed          = 2; // verpasst durch Teilnehmer, Therapeut oder wegen sonstigem Grund
+    }
+
+    // def.requirement.f7b752d9-6cf1-4b1d-a4ea-8dd5022ef099
+    ParticipationState              participation_state         = 12;
+
+    // def.requirement.b0c59fe0-3154-4526-804a-e03ffb4851f4
+    bool                            participant_has_signed      = 13;
 }
 
 
