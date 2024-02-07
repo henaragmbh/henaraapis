@@ -382,10 +382,10 @@ message Appointment
     // def.requirement.29a2ce6e-c02b-4c21-a825-a56908f46db8
     enum BookingState
     {
-        pending         = 0; // Entscheidung ausstehend
-        declined        = 1; // abgelehnt
-        accepted        = 2; // akzeptiert
-        cancelled       = 3; // storniert (durch Teilnehmer oder Therapeut oder ...)
+        bs_pending      = 0; // Entscheidung ausstehend
+        bs_declined     = 1; // abgelehnt
+        bs_accepted     = 2; // akzeptiert
+        bs_cancelled    = 3; // storniert (durch Teilnehmer oder Therapeut oder ...)
     }
 
     // def.requirement.053be870-bb81-4924-93fd-920000d90880
@@ -394,9 +394,9 @@ message Appointment
     // def.requirement.ef3e91ec-93df-4989-9c7a-b7287e2cb9af
     enum ParticipationState
     {
-        pending         = 0; // Status noch nicht bekannt
-        succeeded       = 1; // hat erfolgreich stattfunden
-        missed          = 2; // verpasst durch Teilnehmer, Therapeut oder wegen sonstigem Grund
+        ps_pending      = 0; // Status noch nicht bekannt
+        ps_succeeded    = 1; // hat erfolgreich stattfunden
+        ps_missed       = 2; // verpasst durch Teilnehmer, Therapeut oder wegen sonstigem Grund
     }
 
     // def.requirement.f7b752d9-6cf1-4b1d-a4ea-8dd5022ef099
