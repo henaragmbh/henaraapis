@@ -87,6 +87,15 @@ service customer_API
     /// def.requirement.ea71da9e-8abe-414b-85ce-592107dcfd9c - read entities in a bulk
     rpc query           (query_Request)           returns (query_Response);
 
+    /** def.requirement.58603ab6-837d-4299-aa37-a6f6a88553c1
+        All messages streamed by a call have the same snapshot_time.
+        Combined data of all streamed messages represent a consistent state that was #
+        present at this point in time.
+        Calling this gives the sa same combined result as calling rpc_query() but
+        spread over handable chunks.
+    */
+    rpc query_stream    (query_Request)           returns (stream query_Response);
+
     /** def.requirement.806bbca3-9f08-4176-85d4-9aff890e3c54
         This server streaming call allows asynchronous delivery of messages to the client.
         If enabled in the Request message, the Service sends updated entities to the client after changes
@@ -241,6 +250,12 @@ message query_Request
         \see def.requirement.ea931110-87e5-473f-9a9c-5829761ef628
     */
     optional henara.proto.Timepoint only_what_changed_since = 2;
+
+    /** def.requirement.e418d129-4ec9-4a0a-89fe-9ddff5f6807f
+        Max number of entities per response for the streaming variant of the call.
+        If zero, a default limit is used.
+    */
+    int32                           max_number_of_entities_per_stream_response = 3;
 }
 
 // def.requirement.93e7c097-7c09-4af0-af10-dd970e3367aa
@@ -261,7 +276,6 @@ message query_Response
     */
     henara.proto.Timepoint  snapshot_time   = 2;
 }
-
 
 
 // def.requirement.cc34e526-8631-4e1a-ab0f-80aafe31330b
