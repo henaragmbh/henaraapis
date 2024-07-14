@@ -60,23 +60,40 @@ service customer_API
 
 
       ////////////////////////////////////////////////////////////////////////////////
+     // CRUD of doctor
+    //
+
+    /// def.requirement.8bef302d-581f-4433-87ec-d5e574e7837c
+    rpc doctor_create (doctor_create_Request) returns (doctor_create_Response); // NYI
+
+    /// def.requirement.35ac5851-eb2a-4d66-b2af-acc32d74ac9e
+    rpc doctor_read   (doctor_read_Request)   returns (doctor_read_Response);
+
+    /// def.requirement.9bcaf271-e857-49df-a624-7e815583c23c
+    rpc doctor_update (doctor_update_Request) returns (doctor_update_Response); // NYI
+
+    /// def.requirement.aed31bb8-dadc-44ad-ab69-ad49cddd521f
+    rpc doctor_delete (doctor_delete_Request) returns (doctor_delete_Response); // NYI
+
+
+      ////////////////////////////////////////////////////////////////////////////////
      // CR_D of webhook_endpoint
     //
 
     /// def.requirement.e2a7bf8b-7614-4b58-a4db-237030a3dc0a
-    rpc webhook_endpoint_create     (webhook_endpoint_create_Request)   returns (webhook_endpoint_create_Response); // NYI
+    rpc webhook_endpoint_create     (webhook_endpoint_create_Request)   returns (webhook_endpoint_create_Response);
 
     /// def.requirement.9e72da70-42a2-4f25-a702-3c051e7fb516
-    rpc webhook_endpoint_read       (webhook_endpoint_read_Request)     returns (webhook_endpoint_read_Response); // NYI
+    rpc webhook_endpoint_read       (webhook_endpoint_read_Request)     returns (webhook_endpoint_read_Response);
 
     /// def.requirement.def22e31-84cf-454a-8387-8357a0185de9
-    rpc webhook_endpoint_read_all   (webhook_endpoint_read_all_Request) returns (webhook_endpoint_read_all_Response); // NYI
+    rpc webhook_endpoint_read_all   (webhook_endpoint_read_all_Request) returns (webhook_endpoint_read_all_Response);
 
     /// def.requirement.cdac0902-d9bb-4708-b16a-b9c0dfb47216
     // webhook_endpoints are immutable
 
     /// def.requirement.2e56b82a-fe5b-48c4-b4f3-0ac77f7424d1
-    rpc webhook_endpoint_delete     (webhook_endpoint_delete_Request)   returns (webhook_endpoint_delete_Response); // NYI
+    rpc webhook_endpoint_delete     (webhook_endpoint_delete_Request)   returns (webhook_endpoint_delete_Response);
 
 
 
@@ -164,6 +181,11 @@ message therapist_create_Request            {Therapist         therapist        
 message therapist_read_Request              {henara.proto.Uuid therapist_id        = 1;} message therapist_read_Response            {Therapist therapist = 1;}
 message therapist_update_Request            {Therapist         therapist           = 1;} message therapist_update_Response          {}
 message therapist_delete_Request            {henara.proto.Uuid therapist_id        = 1;} message therapist_delete_Response          {}
+
+message doctor_create_Request               {Doctor            doctor              = 1;} message doctor_create_Response             {}
+message doctor_read_Request                 {henara.proto.Uuid doctor_id           = 1;} message doctor_read_Response               {Doctor doctor = 1;}
+message doctor_update_Request               {Doctor            doctor              = 1;} message doctor_update_Response             {}
+message doctor_delete_Request               {henara.proto.Uuid doctor_id           = 1;} message doctor_delete_Response             {}
 
 message webhook_endpoint_create_Request     {Webhook_endpoint  webhook_endpoint    = 1;} message webhook_endpoint_create_Response   {}
 message webhook_endpoint_read_Request       {henara.proto.Uuid webhook_endpoint_id = 1;} message webhook_endpoint_read_Response     {Webhook_endpoint web_hook_endpoint = 1;}

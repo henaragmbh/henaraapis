@@ -4,8 +4,8 @@ package henara.customer.proto;
 
 import "henara/common/types.proto";
 
-/** Mit [mix-in] markierte Nachrichten enthalten selbst keine adressierbare ID.
-    Instanzen von [mix-in] werden in [entity]-Instanzen, welche ihrerseits über eine ID verfügen, eingebettet.
+/** Mit [value] markierte Nachrichten enthalten selbst keine adressierbare ID.
+    Instanzen von [value] werden in [entity]-Instanzen, welche ihrerseits über eine ID verfügen, eingebettet.
 */
 
 /** def.requirement.ddbab3ae-04a0-4867-80b9-b4f2944e1acf
@@ -29,7 +29,7 @@ enum Entity_kind
 
 
 /** def.requirement.fc0ad32c-de87-45a6-8799-697c682afb00
-    [mix-in]
+    [value]
     Meta-Daten einer Entität
 */
 message Entity_meta_data
@@ -69,7 +69,7 @@ message Webhook_endpoint
 
 
 /** def.requirement.2aa1a40c-be7c-466d-9324-f8d78f4f2f33
-    [mix-in]
+    [value]
     Persönliche Daten
 */
 message Person
@@ -106,7 +106,7 @@ message Person
 
 
 /** def.requirement.81e08de3-c027-4b87-a52a-8d72045daf4c
-    [mix-in]
+    [value]
     Standort
 */
 message Location
@@ -126,7 +126,7 @@ message Location
 
 
 /** def.requirement.8bab21a4-586a-46a8-bca0-072eafada2d2
-    [mix-in]
+    [value]
     Postadresse
 */
 message Postal_address
@@ -145,7 +145,7 @@ message Postal_address
 
 
 /** def.requirement.c917a712-10d9-4f37-9a8a-0da7b32bfb11
-    [mix-in]
+    [value]
     Kontaktinformation
 
     Neben dem Postversand lassen sich Personen über elektronische Dienste benachrichtigen.
@@ -187,7 +187,7 @@ message Contact_address
 
 
 /** def.requirement.3cf692d2-2fe0-4369-aee4-174e86a1a008
-    [mix-in]
+    [value]
     Bankverbindung für Lastschriften bei Selbstzahlern
 */
 message Bank_account
@@ -408,7 +408,7 @@ message Appointment
 
 
 /** def.requirement.7e02808e-7629-4528-9840-600a2b20104b
-    [mix-in]
+    [value]
     Optionen einer Verordnung
 */
 message Prescription_options
@@ -499,7 +499,7 @@ message Doctor
 
 
 /** def.requirement.9fd7b011-12b9-48ea-8bd5-4a0c3a06c285
-    [mix-in]
+    [value]
 */
 message Approval
 {
@@ -564,7 +564,7 @@ message Remedy_position
 
 
 /** def.requirement.45f0e7b0-dc90-47a9-b249-e7b2d31de603
-    [mix-in]
+    [value]
 
     Preisinformation fuer selbst angelegte Position in privater Verordnung
     z.B.:
