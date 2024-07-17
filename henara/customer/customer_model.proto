@@ -65,6 +65,9 @@ message Webhook_endpoint
 
     // def.requirement.02f7b740-b0cb-4c49-8650-471a6f387bf1 - If TRUE, changes to Therapists get notified
     bool                        notify_change_of_therapists     = 5;
+
+    // def.requirement.c0b3f702-0c91-4823-af9a-de3573cac970 - If TRUE, changes to Doctors get notified
+    bool                        notify_change_of_doctors        = 6;
 }
 
 
